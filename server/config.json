@@ -1,0 +1,8 @@
+{
+  "app_name": "Shooting Stars",
+  "base_url": "http://localhost",
+  "port": 8080,
+  "verbose": true,
+  "database_type": "postgres",
+  "database_connection": "sslmode=disable host=localhost port=5432 user=postgres dbname=postgres password=postgres",
+}
