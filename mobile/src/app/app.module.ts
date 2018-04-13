@@ -8,7 +8,9 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 
+import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Gyroscope } from '@ionic-native/gyroscope';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -33,7 +35,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TabsPage
   ],
   providers: [
-    Geolocation,
+    DeviceMotion,
+    Gyroscope,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
