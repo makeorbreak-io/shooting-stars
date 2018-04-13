@@ -36,6 +36,18 @@ func (service *UserService) Get(id uint) (*models.User, error) {
 	return &result, nil
 }
 
+// GetByEmail returns a user by its email
+func (service *UserService) GetByEmail(email string) (*models.User, error) {
+	var result models.User
+	db := service.Database.First(&result, "email = ?", email)
+
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return &result, nil
+}
+
 // GetAll returns all users
 func (service *UserService) GetAll() ([]*models.User, error) {
 	var result []*models.User

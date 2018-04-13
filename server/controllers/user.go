@@ -20,21 +20,9 @@ type UserController struct {
 func (controller *UserController) LoadRoutes(r *gin.RouterGroup) {
 	router := r.Group("/users")
 
-	// Educations
-	router.GET("", controller.GetAll)
 	router.GET("/:id", controller.Get)
-}
-
-// GetAll is a method to get all users
-func (controller *UserController) GetAll(c *gin.Context) {
-	// Get all educations
-	educations, err := controller.UserService.GetAll()
-	if err != nil {
-		controller.HandleError(c, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, educations)
+	router.POST("/:id", controller.Edit)
+	router.DELETE("/:id", controller.Delete)
 }
 
 // Get is a method to get an user
@@ -45,31 +33,13 @@ func (controller *UserController) Get(c *gin.Context) {
 		return
 	}
 
-	education, err := controller.UserService.Get(id)
+	user, err := controller.UserService.Get(id)
 	if err != nil {
 		controller.HandleError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, education)
-}
-
-// Create is a method to create a user upon a request
-func (controller *UserController) Create(c *gin.Context) {
-	var user models.User
-	err := c.ShouldBind(&user)
-	if err != nil {
-		controller.HandleError(c, err)
-		return
-	}
-
-	_, err = controller.UserService.Create(&user)
-	if err != nil {
-		controller.HandleError(c, err)
-		return
-	}
-
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusOK, user)
 }
 
 // Edit is a method to edit a education upon a request

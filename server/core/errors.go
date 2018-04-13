@@ -14,4 +14,6 @@ var (
 	// ErrorNotFound is thrown when a user tries to access an object
 	// that does not exist
 	ErrorNotFound = errors.New("NOT_FOUND")
+	// ErrorBadLogin is thrown when the login credentials are invalid
+	ErrorBadLogin = errors.New("BAD_LOGIN")
 )
