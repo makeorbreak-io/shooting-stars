@@ -22,8 +22,3 @@ type IUserService interface {
 	Update(user *User) error
 	Delete(id uint) error
 }
-
-// TableName returns the table name for the model
-func (User) TableName() string {
-	return "mob_users"
-}
