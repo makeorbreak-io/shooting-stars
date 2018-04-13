@@ -28,6 +28,6 @@ type AuthToken struct {
 // IAuthService is the service for authentication
 type IAuthService interface {
 	CreateTable() error
-	GenerateAuthToken(userID uint) *AuthToken
+	GenerateAuthToken(userID uint) (*AuthToken, error)
 	ValidateLogin(password string, user *User) error
 }

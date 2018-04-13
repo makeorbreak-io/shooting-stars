@@ -1,6 +1,8 @@
 package services
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"github.com/jinzhu/gorm"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"golang.org/x/crypto/bcrypt"
@@ -25,13 +27,40 @@ func (service *AuthService) CreateTable() error {
 }
 
 // Get returns a user by its ID
-func (service *AuthService) GenerateAuthToken(userID uint) *models.AuthToken {
+func (service *AuthService) GenerateAuthToken(userID uint) (*models.AuthToken, error) {
+	token, err := service.generateRandomString(32)
+	if err != nil {
+		return nil, err
+	}
+
 	authToken := models.AuthToken{
-		Token:  "",
+		Token:  token,
 		UserID: userID,
 	}
 
-	return &authToken
+	db := service.Database.Create(&authToken)
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return &authToken, nil
+}
+
+// GenerateRandomBytes returns securely generated random bytes.
+func (service *AuthService) generateRandomBytes(n int) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+// GenerateRandomString returns a URL-safe, base64 encoded securely generated random string.
+func (service *AuthService) generateRandomString(s int) (string, error) {
+	b, err := service.generateRandomBytes(s)
+	return base64.URLEncoding.EncodeToString(b), err
 }
 
 // ValidateLogin checks if the password matches the user hashed password

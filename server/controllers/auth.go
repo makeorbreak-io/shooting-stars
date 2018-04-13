@@ -58,7 +58,11 @@ func (controller *AuthController) Login(c *gin.Context) {
 	}
 
 	// Generate authentication token
-	authToken := controller.AuthService.GenerateAuthToken(user.ID)
+	authToken, err := controller.AuthService.GenerateAuthToken(user.ID)
+	if err != nil {
+		controller.HandleError(c, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, authToken)
 }
@@ -109,5 +113,12 @@ func (controller *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, newUser)
+	// Generate authentication token
+	authToken, err := controller.AuthService.GenerateAuthToken(newUser.ID)
+	if err != nil {
+		c.Status(http.StatusCreated)
+		return
+	}
+
+	c.JSON(http.StatusCreated, authToken)
 }
