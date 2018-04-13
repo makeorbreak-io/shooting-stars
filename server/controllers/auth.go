@@ -23,7 +23,7 @@ func (controller *AuthController) LoadRoutes(r *gin.RouterGroup) {
 	router := r.Group("/auth")
 
 	router.POST("/login", controller.Login)
-	router.GET("/register", controller.Register)
+	router.POST("/register", controller.Register)
 }
 
 // Login is a function that validates a login and returns an authentication token
