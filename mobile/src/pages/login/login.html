@@ -1,17 +1,36 @@
-<!--
-  Generated template for the LoginPage page.
+<ion-content class="login-content" padding>
+    <ion-row class="logo-row">
+      <ion-col></ion-col>
+      <ion-col width-67>
+        <img src="../../assets/imgs/logo.png"/>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+    <div class="login-box">
+      <form (ngSubmit)="login()" #registerForm="ngForm">
+        <ion-row>
+          <ion-col>
+            <ion-list inset>
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
+              <ion-item>
+                <ion-input type="emai" placeholder="Email" name="email" required></ion-input>
+              </ion-item>
 
-</ion-header>
+              <ion-item>
+                <ion-input type="password" placeholder="Password" name="password" required></ion-input>
+              </ion-item>
 
+            </ion-list>
+          </ion-col>
+        </ion-row>
 
-<ion-content padding>
-  <div id="login-content">
-    <ion-input placeholder="Username"></ion-input>
-    <ion-input placeholder="Password" type="password"></ion-input>
-  </div>
-</ion-content>
+        <ion-row>
+          <ion-col class="signup-col">
+            <button ion-button class="submit-btn" full type="submit">Login</button>
+            <button ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</button>
+          </ion-col>
+        </ion-row>
+
+      </form>
+    </div>
+  </ion-content>
