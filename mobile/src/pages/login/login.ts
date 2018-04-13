@@ -34,7 +34,9 @@ export class LoginPage {
           stopOnTerminate: false,
         };
         this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
+          console.log('received location')
           console.log(location)
+          this.backgroundGeolocation.finish();
         });
       }
   }
@@ -45,7 +47,6 @@ export class LoginPage {
   }
 
   startPlaying() : void {
-    console.log('aaaaaaaa')
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
