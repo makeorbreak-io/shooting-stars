@@ -1,15 +1,19 @@
 package models
 
-import "github.com/makeorbreak-io/shooting-stars/server/core"
+import (
+	"github.com/makeorbreak-io/shooting-stars/server/core"
+	"time"
+)
 
 // User is the model for users
 type User struct {
 	core.Model
 
-	Name         string `json:"name" form:"name"`
-	Email        string `json:"email" form:"email"`
-	PasswordHash string `json:"password" form:"password"`
-	Gender       string `json:"gender" form:"gender"`
+	Name         string    `json:"name" form:"name"`
+	Email        string    `json:"email" form:"email"`
+	PasswordHash string    `json:"password" form:"password"`
+	BirthDate    time.Time `json:"birthDate" form:"birthDate"`
+	Gender       string    `json:"gender" form:"gender"`
 }
 
 // IUserService is the service for users
