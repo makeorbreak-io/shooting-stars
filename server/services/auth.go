@@ -26,7 +26,7 @@ func (service *AuthService) CreateTable() error {
 	return service.Database.CreateTable(&models.AuthToken{}).Error
 }
 
-// Get returns a user by its ID
+// GenerateAuthToken generates an authentication token for a given user ID
 func (service *AuthService) GenerateAuthToken(userID uint) (*models.AuthToken, error) {
 	token, err := service.generateRandomString(32)
 	if err != nil {
