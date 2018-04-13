@@ -49,16 +49,26 @@ func main() {
 		database.LogMode(false)
 	}
 
-	// Create tables
+	// Create services
+	authService := &services.AuthService{
+		Database: database,
+	}
 	userService := &services.UserService{
 		Database: database,
 	}
+
+	// Initialize database
 	if *initDatabase {
+		authService.CreateTable()
 		userService.CreateTable()
 	}
 
-	// Load all routes
+	// Load all controllers
 	ctrls := []core.IController{
+		&controllers.AuthController{
+			AuthService: authService,
+			UserService: userService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},

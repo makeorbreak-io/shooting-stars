@@ -14,6 +14,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { LoginProvider } from '../providers/login/login';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     Gyroscope,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LoginProvider
   ]
 })
 export class AppModule {}
