@@ -1,3 +1,10 @@
 page-login {
-
+    .scroll-content {
+        display: flex;
+        align-items: center;
+        #login-content {
+            display: flex;
+            flex-direction: column;
+        }
+    }
 }
