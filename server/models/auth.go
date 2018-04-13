@@ -4,8 +4,8 @@ import "github.com/makeorbreak-io/shooting-stars/server/core"
 
 // LoginRequest holds the login request information
 type LoginRequest struct {
-	Email    string
-	Password string
+	Email    string `json:"email" form:"email"`
+	Password string `json:"password" form:"password"`
 }
 
 // RegisterRequest holds the registration request information
