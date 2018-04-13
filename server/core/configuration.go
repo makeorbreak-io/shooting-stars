@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"strconv"
 )
@@ -29,10 +30,15 @@ func LoadConfiguration(file string) *Configuration {
 	configFile, err := os.Open(file)
 	defer configFile.Close()
 	if err != nil {
+		log.Printf("Could not load the configuration. Error: %v", err)
 		return nil
 	}
 	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(config)
+	err = jsonParser.Decode(config)
+	if err != nil {
+		log.Printf("Could not decode the configuration. Error: %v", err)
+		return nil
+	}
 
 	// Environment variables
 	envBaseURL := os.Getenv("BASE_URL")
