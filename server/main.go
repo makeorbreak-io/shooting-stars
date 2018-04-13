@@ -39,6 +39,9 @@ func main() {
 		log.Fatal("Could not connect to the database: " + err.Error())
 		os.Exit(1)
 	}
+	gorm.DefaultTableNameHandler = func (db *gorm.DB, defaultTableName string) string  {
+		return "mob_" + defaultTableName
+	}
 
 	// Verbose
 	if config.Verbose {
