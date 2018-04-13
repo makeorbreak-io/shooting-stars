@@ -104,6 +104,7 @@ func (controller *AuthController) Register(c *gin.Context) {
 		Name:         request.Name,
 		Email:        request.Email,
 		PasswordHash: string(hashedPassword),
+		BirthDate:    request.BirthDate,
 		Gender:       request.Gender,
 	}
 
