@@ -8,6 +8,7 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
@@ -35,7 +36,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     TabsPage
   ],
   providers: [
+    BackgroundGeolocation,
     DeviceMotion,
+    Geolocation,
     Gyroscope,
     StatusBar,
     SplashScreen,
