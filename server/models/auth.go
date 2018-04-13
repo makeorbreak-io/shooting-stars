@@ -1,8 +1,8 @@
 package models
 
 import (
+	"github.com/aodin/date"
 	"github.com/makeorbreak-io/shooting-stars/server/core"
-	"time"
 )
 
 // LoginRequest holds the login request information
@@ -17,7 +17,7 @@ type RegisterRequest struct {
 	Email           string    `json:"email" form:"email"`
 	Password        string    `json:"password" form:"password"`
 	ConfirmPassword string    `json:"confirmPassword" form:"confirmPassword"`
-	BirthDate       time.Time `json:"birthDate" form:"birthDate"`
+	BirthDate       date.Date `json:"birthDate" form:"birthDate"`
 	Gender          string    `json:"gender" form:"gender"`
 }
 
