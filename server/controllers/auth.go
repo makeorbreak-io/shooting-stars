@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -64,18 +65,49 @@ func (controller *AuthController) Login(c *gin.Context) {
 
 // Register is a function that creates a user registration
 func (controller *AuthController) Register(c *gin.Context) {
-	var user models.User
-	err := c.ShouldBind(&user)
+	var request models.RegisterRequest
+	err := c.ShouldBind(&request)
 	if err != nil {
 		controller.HandleError(c, err)
 		return
 	}
 
-	_, err = controller.UserService.Create(&user)
+	// Verify request
+	if request.Name == "" ||
+		request.Email == "" ||
+		request.Password == "" ||
+		request.ConfirmPassword == "" ||
+		request.Gender == "" {
+		controller.HandleError(c, core.ErrorBadRequest)
+		return
+	}
+	if request.Password != request.ConfirmPassword {
+		controller.HandleError(c, core.ErrorPasswordsDontMatch)
+		return
+	}
+	if request.Gender != "M" && request.Gender != "F" {
+		controller.HandleError(c, core.ErrorInvalidGender)
+		return
+	}
+
+	// Create user
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+	if err != nil {
+		controller.HandleError(c, err)
+		return
+	}
+	newUser := models.User{
+		Name:         request.Name,
+		Email:        request.Email,
+		PasswordHash: string(hashedPassword),
+		Gender:       request.Gender,
+	}
+
+	_, err = controller.UserService.Create(&newUser)
 	if err != nil {
 		controller.HandleError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusCreated, newUser)
 }

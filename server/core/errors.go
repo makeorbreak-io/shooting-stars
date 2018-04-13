@@ -16,4 +16,8 @@ var (
 	ErrorNotFound = errors.New("NOT_FOUND")
 	// ErrorBadLogin is thrown when the login credentials are invalid
 	ErrorBadLogin = errors.New("BAD_LOGIN")
+	// ErrorPasswordsDontMatch is thrown when the register passwords don't match
+	ErrorPasswordsDontMatch = errors.New("PASSWORDS_DONT_MATCH")
+	// ErrorInvalidGender is thrown when the gender is invalid
+	ErrorInvalidGender = errors.New("INVALID_GENDER")
 )

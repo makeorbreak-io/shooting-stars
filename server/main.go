@@ -7,6 +7,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres" // GORM needs this import in
 	"github.com/makeorbreak-io/shooting-stars/server/controllers"
 	"github.com/makeorbreak-io/shooting-stars/server/core"
+	"github.com/makeorbreak-io/shooting-stars/server/middlewares"
 	"github.com/makeorbreak-io/shooting-stars/server/services"
 	"log"
 	"os"
@@ -32,6 +33,7 @@ func main() {
 
 	// Setup router
 	router := gin.Default()
+	router.Use(middlewares.HandleExecutionErrors())
 
 	// Setup database connection
 	database, err := gorm.Open(config.DatabaseType, config.DatabaseConnection)

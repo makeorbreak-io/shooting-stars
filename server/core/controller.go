@@ -54,23 +54,42 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 	switch object {
 	// Gorm Errors
 	case gorm.ErrRecordNotFound:
-		controller.writeError(c, http.StatusNotFound, ErrorNotFound)
+		c.AbortWithError(http.StatusNotFound, ErrorNotFound).
+			SetType(gin.ErrorTypePublic)
 		return
 		// Custom Errors
 	case ErrorBadRequest:
-		controller.writeError(c, http.StatusBadRequest, ErrorBadRequest)
+		c.AbortWithError(http.StatusBadRequest, ErrorBadRequest).
+			SetType(gin.ErrorTypePublic)
 		return
 	case ErrorDuplicated:
-		controller.writeError(c, http.StatusBadRequest, ErrorDuplicated)
+		c.AbortWithError(http.StatusBadRequest, ErrorDuplicated).
+			SetType(gin.ErrorTypePublic)
 		return
 	case ErrorInternalServerError:
-		controller.writeError(c, http.StatusInternalServerError, ErrorInternalServerError)
+		c.AbortWithError(http.StatusInternalServerError, ErrorInternalServerError).
+			SetType(gin.ErrorTypePublic)
 		return
 	case ErrorNotFound:
-		controller.writeError(c, http.StatusBadRequest, ErrorNotFound)
+		c.AbortWithError(http.StatusBadRequest, ErrorNotFound).
+			SetType(gin.ErrorTypePublic)
+		return
+	case ErrorBadLogin:
+		c.AbortWithError(http.StatusUnauthorized, ErrorBadLogin).
+			SetType(gin.ErrorTypePublic)
+		return
+	case ErrorPasswordsDontMatch:
+		c.AbortWithError(http.StatusBadRequest, ErrorPasswordsDontMatch).
+			SetType(gin.ErrorTypePublic)
+		return
+	case ErrorInvalidGender:
+		c.AbortWithError(http.StatusBadRequest, ErrorInvalidGender).
+			SetType(gin.ErrorTypePublic)
 		return
 	default:
-		controller.writeError(c, http.StatusInternalServerError, ErrorInternalServerError)
+		c.Error(object).SetType(gin.ErrorTypePrivate)
+		c.AbortWithError(http.StatusInternalServerError, ErrorInternalServerError).
+			SetType(gin.ErrorTypePublic)
 		return
 	}
 }
