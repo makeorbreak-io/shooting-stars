@@ -3,8 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
+import { GamePage } from '../pages/game/game';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
@@ -20,8 +19,7 @@ import { LoginProvider } from '../providers/login/login';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
+    GamePage,
     HomePage,
     TabsPage,
     LoginPage
@@ -33,8 +31,7 @@ import { LoginProvider } from '../providers/login/login';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
+    GamePage,
     HomePage,
     TabsPage,
     LoginPage

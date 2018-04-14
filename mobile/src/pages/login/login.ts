@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Platform } from 'ionic-angular';
+import { GamePageModule } from '../game/game.module';
+import { GamePage } from '../game/game';
 
 @IonicPage()
 @Component({
@@ -15,6 +17,10 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+  }
+
+  onLoginSuccessfull() {
+    this.navCtrl.setRoot(GamePage);
   }
 
 }
