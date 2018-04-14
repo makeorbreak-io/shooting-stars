@@ -72,6 +72,18 @@ func (service *UserService) GetUsersMostWins(limit uint) ([]*models.User, error)
 	return result, nil
 }
 
+// AddWin adds a win to a user
+func (service *UserService) AddWin(userID uint) error {
+	user, err := service.Get(userID)
+	if err != nil {
+		return err
+	}
+
+	user.Wins += 1
+
+	return service.Update(user)
+}
+
 // Create saves a new user in the database
 func (service *UserService) Create(user *models.User) (uint, error) {
 	if !service.Database.NewRecord(user) {

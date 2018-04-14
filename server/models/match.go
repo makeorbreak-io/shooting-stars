@@ -9,11 +9,12 @@ import (
 type Match struct {
 	core.Model
 
-	StartTime        time.Time `json:"startTime"`
-	UserOneID        uint      `json:"userOneID"`
-	UserTwoID        uint      `json:"userTwoID"`
-	UserOneShootTime time.Time `json:"userOneShootTime"`
-	UserTwoShootTime time.Time `json:"userTwoShootTime"`
+	StartTime        time.Time  `json:"startTime"`
+	UserOneID        uint       `json:"userOneID"`
+	UserTwoID        uint       `json:"userTwoID"`
+	UserOneShootTime *time.Time `json:"userOneShootTime" gorm:"null"`
+	UserTwoShootTime *time.Time `json:"userTwoShootTime" gorm:"null"`
+	WinnerID         *uint       `json:"winnerID"`
 }
 
 // IMatchService is the service for matches

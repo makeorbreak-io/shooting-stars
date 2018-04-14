@@ -32,6 +32,7 @@ type IUserService interface {
 	GetByEmail(email string) (*User, error)
 	GetAll() ([]*User, error)
 	GetUsersMostWins(limit uint) ([]*User, error)
+	AddWin(userID uint) error
 	Create(user *User) (uint, error)
 	Update(user *User) error
 	Delete(id uint) error

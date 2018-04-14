@@ -101,6 +101,7 @@ func main() {
 			LocationService: locationService,
 		},
 		&controllers.MatchController{
+			UserService:  userService,
 			MatchService: matchService,
 		},
 		&controllers.StatsController{
