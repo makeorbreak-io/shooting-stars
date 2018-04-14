@@ -1,17 +1,23 @@
 page-profile {
-  .scroll-content {
-    justify-content: center;
-    display: flex !important;
-    flex-direction: column;
-    align-items: center !important;
-
-    ion-img {
-      width: 15rem;
-      height: 15rem;
-      background: transparent;
-      img {
-        border-radius: 50%;
-      }
+    .scroll-content {
+        justify-content: center;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center !important;
+        ion-img {
+            width: 15rem;
+            height: 15rem;
+            background: transparent;
+            margin-bottom: 4rem;
+            img {
+                border-radius: 50%;
+            }
+        }
+        #profile {
+            background: $dark-brown;
+            width: 90%;
+            border-radius: 5px;
+            box-shadow: 3px 2px 2px 2px #333;
+        }
     }
-  }
 }
