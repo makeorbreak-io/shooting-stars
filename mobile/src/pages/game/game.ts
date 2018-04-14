@@ -10,6 +10,7 @@ import { Platform } from 'ionic-angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Vibration } from '@ionic-native/vibration';
 import { GlobalsProvider } from '../../providers/globals/globals';
+import { NativeAudio } from '@ionic-native/native-audio';
 
 /**
  * Generated class for the GamePage page.
@@ -17,6 +18,12 @@ import { GlobalsProvider } from '../../providers/globals/globals';
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
+
+enum State {
+  WAITING,
+  IN_MATCH,
+  END
+}
 
 @IonicPage()
 @Component({
@@ -28,7 +35,7 @@ export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig;
   private socket: WebSocket;
-
+  private state: State;
   constructor(
     public api: ApiProvider,
     public authProvider: AuthProvider,
@@ -40,6 +47,7 @@ export class GamePage {
     private gyroscope: Gyroscope,
     private deviceMotion: DeviceMotion,
     private globals: GlobalsProvider,
+    private nativeAudio: NativeAudio,
     private vibration: Vibration) {
     if (this.platform.is('cordova')) {
       this.mobileDevice = true
@@ -67,10 +75,12 @@ export class GamePage {
       setTimeout(() => this.send(JSON.stringify({ message: 'hello server' })), 3000);
     }
 
-    this.socket.onmessage = function (event) {
+    this.socket.onmessage = (event) => {
       let m = JSON.parse(event.data);
       console.log("Received message", m.message);
-      game.startMatch();
+      if (this.state == State.WAITING) {
+        game.startMatch();
+      }
     }
 
     this.socket.onerror = function (err) {
@@ -85,6 +95,7 @@ export class GamePage {
   }
 
   startPlaying(): void {
+    this.state = State.WAITING
     this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
@@ -112,11 +123,12 @@ export class GamePage {
   }
 
   startMatch() : void {
-    this.backgroundMode.unlock()
+    this.state = State.IN_MATCH;
     this.backgroundMode.wakeUp()
     this.backgroundMode.moveToForeground()
+    this.backgroundMode.unlock()
     this.platform.resume.asObservable().subscribe(() => {
-      //this.nativeAudio.play('westernWhistle', () => {});
+      this.nativeAudio.play('westernWhistle', () => {});
       this.vibration.vibrate(3000);
       
       // Get the device current acceleration
@@ -127,10 +139,8 @@ export class GamePage {
     });
   }
 
-
-
   handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
-    console.log('acceleration', acceleration);
+    console.log('acceleration', acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp);
     if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 2 && Math.abs(acceleration.z) <= 2) {
       let options: GyroscopeOptions = {
         frequency: 30
@@ -156,6 +166,7 @@ export class GamePage {
   }
 
   shoot() {
+    this.state = State.END;
     console.log('SHOT A SHERIFF!!!')
     this.api.post('/shoot/' + this.authProvider.userID, {
     })
