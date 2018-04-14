@@ -34,10 +34,13 @@ func (controller *UserController) Get(c *gin.Context) {
 	}
 
 	// Check if getting logged user
-	sessionID, exists := c.Get("userID")
-	if !exists ||
-		sessionID != id {
-		controller.HandleError(c, core.ErrorBadRequest)
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 
@@ -65,10 +68,16 @@ func (controller *UserController) Edit(c *gin.Context) {
 		controller.HandleError(c, err)
 		return
 	}
-	sessionID, exists := c.Get("userID")
-	if id != user.ID ||
-		!exists ||
-		sessionID != id {
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
+		return
+	}
+	if id != user.ID {
 		controller.HandleError(c, core.ErrorBadRequest)
 		return
 	}
@@ -92,10 +101,13 @@ func (controller *UserController) Delete(c *gin.Context) {
 	}
 
 	// Check if deleting logged user
-	sessionID, exists := c.Get("userID")
-	if !exists ||
-		sessionID != id {
-		controller.HandleError(c, core.ErrorBadRequest)
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 

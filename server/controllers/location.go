@@ -38,10 +38,13 @@ func (controller *LocationController) Update(c *gin.Context) {
 		controller.HandleError(c, err)
 		return
 	}
-	sessionID, exists := c.Get("userID")
-	if !exists ||
-		id != sessionID {
-		controller.HandleError(c, core.ErrorBadRequest)
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 
