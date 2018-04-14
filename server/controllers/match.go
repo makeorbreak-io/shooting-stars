@@ -43,7 +43,7 @@ func (controller *MatchController) Shoot(c *gin.Context) {
 	}
 
 	// Get user match
-	match, err := controller.MatchService.GetActiveMatchByUserID(userID)
+	match, err := controller.MatchService.GetActiveMatchByUserID(userID, core.GetConfiguration().MatchTimeout)
 	if match == nil {
 		controller.HandleError(c, core.ErrorNotInMatch)
 		return

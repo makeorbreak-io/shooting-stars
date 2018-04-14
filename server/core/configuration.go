@@ -17,8 +17,9 @@ type Configuration struct {
 	Verbose               bool   `json:"verbose"`
 	DatabaseType          string `json:"database_type"`
 	DatabaseConnection    string `json:"database_connection"`
-	MaxLocationLastUpdate uint    `json:"maxLocationLastUpdate"`
-	MatchMakingInterval   uint    `json:"matchMakingInterval"`
+	MaxLocationLastUpdate uint   `json:"maxLocationLastUpdate"`
+	MatchTimeout          uint   `json:"matchTimeout"`
+	MatchMakingInterval   uint   `json:"matchMakingInterval"`
 }
 
 // GetConfiguration returns the configuration

@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
+	"time"
 )
 
 // Ensure MatchService implements IMatchService.
@@ -37,9 +38,10 @@ func (service *MatchService) Get(id uint) (*models.Match, error) {
 }
 
 // GetActiveMatchByUserID returns the active match of a user ID
-func (service *MatchService) GetActiveMatchByUserID(userID uint) (*models.Match, error) {
+func (service *MatchService) GetActiveMatchByUserID(userID, timeout uint) (*models.Match, error) {
 	var result models.Match
 	db := service.Database.
+		Where("created_at >= ?", time.Now().Add(-1*time.Second*time.Duration(timeout))).
 		Where("user_one_id = ? OR user_two_id = ?", userID, userID).
 		Where("user_one_shoot_time = ? OR user_two_shoot_time = ?", nil, nil).
 		First(&result)
