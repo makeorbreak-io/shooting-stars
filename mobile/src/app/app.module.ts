@@ -4,10 +4,11 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { GamePage } from '../pages/game/game';
-import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
+import { ProfilePage } from '../pages/profile/profile';
+import { LeaderboardPage } from '../pages/leaderboard/leaderboard';
 
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { DeviceMotion } from '@ionic-native/device-motion';
@@ -26,10 +27,11 @@ import { AuthProvider } from '../providers/auth/auth';
   declarations: [
     MyApp,
     GamePage,
-    HomePage,
     TabsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    LeaderboardPage,
+    ProfilePage
   ],
   imports: [
     BrowserModule,
@@ -40,10 +42,11 @@ import { AuthProvider } from '../providers/auth/auth';
   entryComponents: [
     MyApp,
     GamePage,
-    HomePage,
     TabsPage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    LeaderboardPage,
+    ProfilePage
   ],
   providers: [
     BackgroundGeolocation,

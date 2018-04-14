@@ -14,6 +14,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'leaderboard.html',
 })
 export class LeaderboardPage {
+  players = [{ 'name': 'John', 'wins': 5 },
+    { 'name': 'Dow', 'wins': 4 },
+    { 'name': 'Mary', 'wins': 3 },
+    { 'name': 'Jane', 'wins': 2 },
+    { 'name': 'Gustavo', 'wins': 1 }];
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }

@@ -1,3 +1,17 @@
 page-profile {
+  .scroll-content {
+    justify-content: center;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center !important;
 
+    ion-img {
+      width: 15rem;
+      height: 15rem;
+      background: transparent;
+      img {
+        border-radius: 50%;
+      }
+    }
+  }
 }

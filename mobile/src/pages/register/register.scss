@@ -1,59 +1,54 @@
 page-register {
-
-  .register-content {
-    background: $light-yellow;
-
-    .logo-row {
-      padding-top: 50px;
-      padding-bottom: 20px;
+    .scroll-content {
+        justify-content: center;
+        display: flex !important;
+        align-items: center !important;
     }
-
-    .register-box {
-      background: $light-brown;
-      padding: 20px 20px 0px 20px;
-      margin-top: 30px;
-      border-radius: 10px;
+    .register-content {
+        background: $light-yellow;
+        .logo-row {
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
+        .register-box {
+            background: $light-brown;
+            padding: 20px 20px 0px 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+        ion-row {
+            align-items: center;
+            text-align: center;
+        }
+        ion-item {
+            border-radius: 30px !important;
+            padding-left: 30px !important;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            border: 1px solid #ffffff;
+            border-bottom: 0px !important;
+            box-shadow: none !important;
+        }
+        .signup-col {
+            margin: 0px 16px 0px 16px;
+            padding-bottom: 20px;
+        }
+        .item-inner {
+            border-bottom-color: #ffffff !important;
+            box-shadow: none !important;
+        }
+        .submit-btn {
+            background: $dark-brown;
+            border-radius: 30px !important;
+            border: 1px solid #ffffff;
+        }
+        .back-btn {
+            background: $light-brown;
+            border: 1px solid #ffffff;
+        }
+        .register-btn {
+            color: #ffffff;
+            font-size: 0.8em;
+        }
     }
-
-    ion-row {
-       align-items: center;
-       text-align: center;
-     }
-
-     ion-item {
-         border-radius: 30px !important;
-         padding-left: 30px !important;
-         font-size: 0.9em;
-         margin-bottom: 10px;
-         border: 1px solid #ffffff;
-         border-bottom: 0px !important;
-         box-shadow: none !important;
-     }
-
-     .signup-col {
-       margin: 0px 16px 0px 16px;
-       padding-bottom: 20px;
-     }
-
-     .item-inner {
-       border-bottom-color: #ffffff !important;
-       box-shadow: none !important;
-     }
-
-     .submit-btn {
-       background: $dark-brown;
-       border-radius: 30px !important;
-       border: 1px solid #ffffff;
-     }
-     .back-btn {
-      background: $light-brown;
-      border: 1px solid #ffffff;
-    }
-     .register-btn {
-       color: #ffffff;
-       font-size: 0.8em;
-     }
-
-  }
-
 }
