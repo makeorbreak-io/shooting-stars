@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { Platform } from 'ionic-angular';
 import { GamePageModule } from '../game/game.module';
-import { GamePage } from '../game/game';
 import { RegisterPage } from '../register/register';
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
