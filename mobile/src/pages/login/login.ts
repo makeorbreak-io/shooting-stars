@@ -20,17 +20,14 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
   }
 
   login() {
-    console.log('login');
     let json = {
       "email": this.userCredentials.email,
       "password": this.userCredentials.password
     }
     this.api.post('/auth/login', json).then(data => {
-      console.log(data);
       this.auth.setData(data);
       this.navCtrl.setRoot(TabsPage, { animate: true, direction: 'forward' });
     })

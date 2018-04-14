@@ -1,5 +1,6 @@
-
-
 <ion-content padding>
+
+  <button *ngIf="!searching" ion-button class="start" (click)="startPlaying()">Search For Duels</button>
+  <button *ngIf="searching" ion-button class="stop" (click)="stopPlaying()">Leave Quest</button>
 
 </ion-content>

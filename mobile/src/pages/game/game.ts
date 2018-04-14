@@ -28,7 +28,7 @@ export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig;
   private socket: WebSocket;
-
+  private searching: boolean = false;
   constructor(
     public api: ApiProvider,
     public authProvider: AuthProvider,
@@ -85,6 +85,7 @@ export class GamePage {
   }
 
   startPlaying(): void {
+    this.searching = true;
     this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
@@ -106,6 +107,7 @@ export class GamePage {
   }
 
   stopPlaying(): void {
+    this.searching = false;
     if (this.mobileDevice) {
       this.backgroundGeolocation.stop()
     }
@@ -118,7 +120,7 @@ export class GamePage {
     this.platform.resume.asObservable().subscribe(() => {
       //this.nativeAudio.play('westernWhistle', () => {});
       this.vibration.vibrate(3000);
-      
+
       // Get the device current acceleration
       this.deviceMotion.getCurrentAcceleration().then(
         (a) => this.handleAccelerometer(a),
@@ -180,4 +182,6 @@ export class GamePage {
       console.error(error);
     });
   }
+
+
 }
