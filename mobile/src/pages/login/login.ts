@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { Platform } from 'ionic-angular';
 import { RegisterPage } from '../register/register';
 import { ApiProvider } from '../../providers/api/api';
@@ -16,7 +15,7 @@ import { TabsPage } from '../tabs/tabs';
 export class LoginPage {
 
   mobileDevice: boolean;
-  userCredentials = { email: '', password: '' };
+  userCredentials = { email: 'user@email.com', password: '123' };
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider) {
   }
 
