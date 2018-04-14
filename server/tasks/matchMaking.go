@@ -37,7 +37,7 @@ func (task *MatchMakingTask) Start(interval uint) {
 
 // Stop stops the execution of the task
 func (task *MatchMakingTask) Stop() {
-
+	close(task.quit)
 }
 
 // Run executes the match making task
