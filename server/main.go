@@ -32,11 +32,6 @@ func main() {
 		return
 	}
 
-	// Setup router
-	router := gin.Default()
-	router.Use(middlewares.HandleExecutionErrors())
-	router.Use(middlewares.HandleCors())
-
 	// Setup database connection
 	database, err := gorm.Open(config.DatabaseType, config.DatabaseConnection)
 	if err != nil {
@@ -55,6 +50,11 @@ func main() {
 		gin.SetMode(gin.DebugMode)
 		database.LogMode(true)
 	}
+
+	// Setup router
+	router := gin.Default()
+	router.Use(middlewares.HandleExecutionErrors())
+	router.Use(middlewares.HandleCors())
 
 	// Create services
 	authService := &services.AuthService{
@@ -126,5 +126,6 @@ func main() {
 	matchMakingTask.Stop()
 
 	// Start the server
+	log.Printf("Started the server on port %d (prod = %v)", config.Port, config.Production)
 	router.Run(":" + strconv.Itoa(config.Port))
 }
