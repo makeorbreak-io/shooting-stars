@@ -1,11 +1,12 @@
+import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
-import { HTTP } from '@ionic-native/http'
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Generated class for the GamePage page.
@@ -23,8 +24,8 @@ export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig
   constructor(
+    public api: ApiProvider,
     public authProvider: AuthProvider,
-    public http: HTTP,
     public navCtrl: NavController,
     public navParams: NavParams,
     private backgroundGeolocation: BackgroundGeolocation,
@@ -67,23 +68,29 @@ export class GamePage {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
     }
-    this.http.post('https://shooting-stars.herokuapp.com/locations/' + this.authProvider.userID, {
-      'latitude': 1,
-      'longitude': 1
-      }, {
-        'Authorization': this.authProvider.token
-      })
+    console.log('Math starting.')
+    let json = {
+      "latitude": 41.157944,
+      "longitude": -8.629105
+    }
+    this.api.post('/locations/' + this.authProvider.userID, {
+      "latitude": 41.157944,
+      "longitude": -8.629105
+    })
       .then(data => {
-        console.log(data.data);
-      }).catch(error => {
-        console.log(error.status);
+        console.log('aaaa')
+        console.log(data);
+      }).catch((error: HttpErrorResponse) => {
+        console.log('bbbb')
+        console.log(error);
       });
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
       console.log(location.coords)
-      console.log('locations/' + this.authProvider.userID)
       this.backgroundGeolocation.finish();
-    });
+    }, (error: any) => {
+      console.error(error)
+    })
     this.backgroundGeolocation.start()
     this.startMatch()
   }
