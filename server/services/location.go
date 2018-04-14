@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
+	"github.com/paulmach/go.geo"
 )
 
 // Ensure LocationService implements ILocationService.
@@ -36,11 +37,10 @@ func (service *LocationService) Get(userID uint) (*models.Location, error) {
 }
 
 // Create saves a new match in the database
-func (service *LocationService) Create(userID uint, latitude, longitude float32) (uint, error) {
+func (service *LocationService) Create(userID uint, latitude, longitude float64) (uint, error) {
 	location := models.Location{
-		UserID:    userID,
-		Latitude:  latitude,
-		Longitude: longitude,
+		UserID:   userID,
+		Location: *geo.NewPointFromLatLng(latitude, longitude),
 	}
 
 	db := service.Database.Create(&location)
@@ -52,8 +52,8 @@ func (service *LocationService) Create(userID uint, latitude, longitude float32)
 }
 
 // Update updates the information about a match in the database
-func (service *LocationService) Update(userID uint, latitude, longitude float32) error {
+func (service *LocationService) Update(userID uint, latitude, longitude float64) error {
 	return service.Database.Model(&models.Location{}).
 		Where("userID = ?", userID).
-		Updates(map[string]interface{}{"latitude": latitude, "longitude": longitude}).Error
+		Updates(map[string]interface{}{"location": *geo.NewPointFromLatLng(latitude, longitude)}).Error
 }
