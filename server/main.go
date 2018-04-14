@@ -99,6 +99,9 @@ func main() {
 		&controllers.LocationController{
 			LocationService: locationService,
 		},
+		&controllers.MatchController{
+			MatchService: matchService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},
