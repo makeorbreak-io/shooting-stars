@@ -30,7 +30,7 @@ func (controller *AuthController) LoadRoutes(r *gin.RouterGroup) {
 func (controller *AuthController) Login(c *gin.Context) {
 	// Get request information
 	var request models.LoginRequest
-	err := c.ShouldBind(&request)
+	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		controller.HandleError(c, err)
 		return
@@ -70,7 +70,7 @@ func (controller *AuthController) Login(c *gin.Context) {
 // Register is a function that creates a user registration
 func (controller *AuthController) Register(c *gin.Context) {
 	var request models.RegisterRequest
-	err := c.ShouldBind(&request)
+	err := c.ShouldBindJSON(&request)
 	if err != nil {
 		controller.HandleError(c, err)
 		return

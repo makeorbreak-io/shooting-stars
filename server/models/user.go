@@ -9,11 +9,11 @@ import (
 type User struct {
 	core.Model
 
-	Name         string    `json:"name" form:"name"`
-	Email        string    `json:"email" form:"email"`
-	PasswordHash string    `json:"password" form:"password"`
-	BirthDate    date.Date `json:"birthDate" form:"birthDate"`
-	Gender       string    `json:"gender" form:"gender"`
+	Name         string    `json:"name"`
+	Email        string    `json:"email"`
+	PasswordHash string    `json:"password"`
+	BirthDate    date.Date `json:"birthDate"`
+	Gender       string    `json:"gender"`
 }
 
 // IUserService is the service for users
