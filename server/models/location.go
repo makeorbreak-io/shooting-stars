@@ -26,7 +26,7 @@ type ILocationService interface {
 	CreateTable() error
 	Get(userID uint) (*Location, error)
 	GetActiveUsers(maxLastUpdate uint) ([]uint, error)
-	GetNearestUserLocation(userID uint) ([]*Location, error)
+	GetNearestActiveUserLocation(userID, maxLastUpdate uint) ([]*Location, error)
 	Create(userID uint, latitude, longitude float64) (uint, error)
 	Update(userID uint, latitude, longitude float64) error
 }

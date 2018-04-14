@@ -48,15 +48,20 @@ func (task *MatchMakingTask) Run() {
 		return
 	}
 
+	if len(activeUsersIDs) == 0 {
+		log.Printf("No active users.")
+		return
+	}
+
 	for _, userID := range activeUsersIDs {
-		nearestUsersLocations, err := task.LocationService.GetNearestUserLocation(userID)
+		nearestUsersLocations, err := task.LocationService.GetNearestActiveUserLocation(userID, core.GetConfiguration().MaxLocationLastUpdate)
 		if err != nil {
-			log.Printf("Error when getting nearest user location: %v", err)
+			log.Printf("Error when getting nearest active users locations: %v", err)
 			continue
 		}
 
 		if len(nearestUsersLocations) == 0 {
-			log.Printf("No users near %d", userID)
+			log.Printf("No active users near %d", userID)
 			continue
 		}
 

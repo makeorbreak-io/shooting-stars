@@ -65,8 +65,15 @@ func (service *LocationService) GetActiveUsers(maxLastUpdate uint) ([]uint, erro
 	return result, nil
 }
 
-// GetNearestUserLocation returns the nearest user location to a given user
-func (service *LocationService) GetNearestUserLocation(userID uint) ([]*models.Location, error) {
+// GetNearestActiveUserLocation returns the nearest active users locations to a given user
+func (service *LocationService) GetNearestActiveUserLocation(userID, maxLastUpdate uint) ([]*models.Location, error) {
+	// Active users
+	activeUsers, err := service.GetActiveUsers(maxLastUpdate)
+	if err != nil {
+		return nil, err
+	}
+
+	// Current user location
 	userLocation, err := service.Get(userID)
 	if err != nil {
 		return nil, err
@@ -75,7 +82,7 @@ func (service *LocationService) GetNearestUserLocation(userID uint) ([]*models.L
 	var result []*models.Location
 	db := service.Database.
 		Order("ST_Distance(location, '" + userLocation.Location.ToWKT() + "')").
-		Where("user_id != ?", userID).
+		Where("user_id != ? AND user_id IN (?)", userID, activeUsers).
 		Limit(10).
 		Find(&result)
 
