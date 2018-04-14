@@ -17,6 +17,11 @@ func HandleCors() gin.HandlerFunc {
 				"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 		}
 
+		// Stop here if its Preflighted OPTIONS request
+		if c.Request.Method == "OPTIONS" {
+			return
+		}
+
 		c.Next()
 	}
 }
