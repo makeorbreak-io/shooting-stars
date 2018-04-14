@@ -42,8 +42,7 @@ func (service *MatchService) GetActiveMatchByUserID(userID, timeout uint) (*mode
 	var result models.Match
 	db := service.Database.
 		Where("created_at >= ?", time.Now().Add(-1*time.Second*time.Duration(timeout))).
-		Where("user_one_id = ? OR user_two_id = ?", userID, userID).
-		Where("user_one_shoot_time = ? OR user_two_shoot_time = ?", nil, nil).
+		Where("(user_one_id = ? AND user_one_shoot_time IS NULL) OR (user_two_id = ? AND user_two_shoot_time IS NULL)", userID, userID).
 		First(&result)
 
 	if db.Error != nil {

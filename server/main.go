@@ -122,6 +122,9 @@ func main() {
 	}
 	matchMakingTask.Start(config.MatchMakingInterval)
 
+	// TODO: Remove me
+	matchMakingTask.Stop()
+
 	// Start the server
 	router.Run(":" + strconv.Itoa(config.Port))
 }

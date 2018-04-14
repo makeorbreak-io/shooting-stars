@@ -20,15 +20,15 @@ type MatchMakingTask struct {
 
 // Start is a function to start the task with a given interval between runs
 func (task *MatchMakingTask) Start(interval uint) {
-	ticker := time.NewTicker(time.Second * time.Duration(interval))
-	quit := make(chan struct{})
+	task.ticker = time.NewTicker(time.Second * time.Duration(interval))
+	task.quit = make(chan struct{})
 	go func() {
 		for {
 			select {
-			case <-ticker.C:
+			case <-task.ticker.C:
 				task.Run()
-			case <-quit:
-				ticker.Stop()
+			case <-task.quit:
+				task.ticker.Stop()
 				return
 			}
 		}
