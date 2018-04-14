@@ -27,7 +27,7 @@ func (controller *UserController) LoadRoutes(r *gin.RouterGroup) {
 
 // Get is a method to get an user
 func (controller *UserController) Get(c *gin.Context) {
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return
@@ -63,7 +63,7 @@ func (controller *UserController) Edit(c *gin.Context) {
 	}
 
 	// Check if editing the user of the request
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return
@@ -94,7 +94,7 @@ func (controller *UserController) Edit(c *gin.Context) {
 
 // Delete is a method to delete a education upon a request
 func (controller *UserController) Delete(c *gin.Context) {
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return

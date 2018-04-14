@@ -33,7 +33,7 @@ func (controller *LocationController) Update(c *gin.Context) {
 	}
 
 	// Check if editing own user
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return

@@ -3,6 +3,7 @@ package middlewares
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"net/http/httputil"
 )
 
 // HandleExecutionErrors checks if the request resulted in errors and displays them
@@ -23,6 +24,8 @@ func HandleExecutionErrors() gin.HandlerFunc {
 					log.Printf("Error Render: %v", err)
 				case gin.ErrorTypePrivate:
 					log.Printf("Error: %v", err)
+					requestDump, _ := httputil.DumpRequest(c.Request, true)
+					log.Printf("Request: %s", string(requestDump))
 				}
 			}
 

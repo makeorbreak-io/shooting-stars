@@ -107,8 +107,8 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 }
 
 // GetRequestID returns the ID value of a request
-func (controller *Controller) GetRequestID(c *gin.Context) (uint, error) {
-	value, err := controller.GetRequestParam(c, "id")
+func (controller *Controller) GetRequestID(c *gin.Context, param string) (uint, error) {
+	value, err := controller.GetRequestParam(c, param)
 	if err != nil {
 		return 0, ErrorBadRequest
 	}
