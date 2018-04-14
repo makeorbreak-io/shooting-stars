@@ -10,7 +10,7 @@ type User struct {
 	core.Model
 
 	Name         string    `json:"name"`
-	Email        string    `json:"email"`
+	Email        string    `json:"email" gorm:"unique"`
 	PasswordHash string    `json:"password"`
 	BirthDate    date.Date `json:"birthDate"`
 	Gender       string    `json:"gender"`

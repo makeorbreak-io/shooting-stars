@@ -86,6 +86,10 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 		c.AbortWithError(http.StatusBadRequest, ErrorInvalidGender).
 			SetType(gin.ErrorTypePublic)
 		return
+	case ErrorEmailAlreadyExists:
+		c.AbortWithError(http.StatusBadRequest, ErrorEmailAlreadyExists).
+			SetType(gin.ErrorTypePublic)
+		return
 	default:
 		c.Error(object).SetType(gin.ErrorTypePrivate)
 		c.AbortWithError(http.StatusInternalServerError, ErrorInternalServerError).

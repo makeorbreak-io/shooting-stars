@@ -93,6 +93,10 @@ func (controller *AuthController) Register(c *gin.Context) {
 		controller.HandleError(c, core.ErrorInvalidGender)
 		return
 	}
+	if user, err := controller.UserService.GetByEmail(request.Email); user != nil || err != nil {
+		controller.HandleError(c, core.ErrorEmailAlreadyExists)
+		return
+	}
 
 	// Create user
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
