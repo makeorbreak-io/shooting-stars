@@ -19,7 +19,7 @@ export class LoginPage {
 
   mobileDevice: boolean;
   userCredentials = { email: '', password: '' };
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider) {
   }
 
   ionViewDidLoad() {
@@ -46,7 +46,6 @@ export class LoginPage {
   }
 
   createAccount() {
-    console.log("createAccount");
     this.navCtrl.setRoot(RegisterPage);
   }
 
