@@ -7,6 +7,7 @@ import { GamePage } from '../pages/game/game';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { LoginPage } from '../pages/login/login';
+import { RegisterPage } from '../pages/register/register';
 
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { DeviceMotion } from '@ionic-native/device-motion';
@@ -14,7 +15,10 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { LoginProvider } from '../providers/login/login';
+import { ApiProvider } from '../providers/api/api';
+import { HttpClientModule} from '@angular/common/http';
+import { GlobalsProvider } from '../providers/globals/globals';
+import { AuthProvider } from '../providers/auth/auth';
 
 @NgModule({
   declarations: [
@@ -22,10 +26,12 @@ import { LoginProvider } from '../providers/login/login';
     GamePage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    RegisterPage
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -34,7 +40,8 @@ import { LoginProvider } from '../providers/login/login';
     GamePage,
     HomePage,
     TabsPage,
-    LoginPage
+    LoginPage,
+    RegisterPage
   ],
   providers: [
     BackgroundGeolocation,
@@ -44,7 +51,10 @@ import { LoginProvider } from '../providers/login/login';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    LoginProvider
+    ApiProvider,
+    HttpClientModule,
+    GlobalsProvider,
+    AuthProvider
   ]
 })
 export class AppModule {}

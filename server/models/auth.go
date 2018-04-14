@@ -7,18 +7,18 @@ import (
 
 // LoginRequest holds the login request information
 type LoginRequest struct {
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // RegisterRequest holds the registration request information
 type RegisterRequest struct {
-	Name            string    `json:"name" form:"name"`
-	Email           string    `json:"email" form:"email"`
-	Password        string    `json:"password" form:"password"`
-	ConfirmPassword string    `json:"confirmPassword" form:"confirmPassword"`
-	BirthDate       date.Date `json:"birthDate" form:"birthDate"`
-	Gender          string    `json:"gender" form:"gender"`
+	Name            string    `json:"name"`
+	Email           string    `json:"email"`
+	Password        string    `json:"password"`
+	ConfirmPassword string    `json:"confirmPassword"`
+	BirthDate       date.Date `json:"birthDate"`
+	Gender          string    `json:"gender"`
 }
 
 // AuthToken is the model for an authentication token

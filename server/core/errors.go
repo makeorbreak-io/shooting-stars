@@ -20,4 +20,6 @@ var (
 	ErrorPasswordsDontMatch = errors.New("PASSWORDS_DONT_MATCH")
 	// ErrorInvalidGender is thrown when the gender is invalid
 	ErrorInvalidGender = errors.New("INVALID_GENDER")
+	// ErrorEmailAlreadyExists is thrown when the register email is already registered
+	ErrorEmailAlreadyExists = errors.New("EMAIL_ALREADY_EXISTS")
 )

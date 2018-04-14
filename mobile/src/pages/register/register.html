@@ -1,0 +1,56 @@
+<ion-content class="register-content" padding>
+  <ion-row class="logo-row">
+    <ion-col></ion-col>
+    <ion-col width-67>
+      <img src="../../assets/imgs/logo.png" />
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+  <div class="register-box">
+
+    <div id="error-message" ngif="errorMessage != null">{{errorMessage}}</div>
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-input type="emai" placeholder="Name" name="name" [(ngModel)]="name" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input type="emai" placeholder="Email" name="email" [(ngModel)]="email" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="password" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input type="password" placeholder="Confirm Password" name="confirmPassword" [(ngModel)]="confirmPassword" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-datetime displayFormat="MM/DD/YYYY" placeholder="Birth Date" name="birthDate" [(ngModel)]="birthDate"></ion-datetime>
+            </ion-item>
+
+            <ion-item>
+              <ion-select interface="popover" name="gender" placeholder="Gender" [(ngModel)]="gender">
+                <ion-option value="M" selected>Male</ion-option>
+                <ion-option value="F">Female</ion-option>
+              </ion-select>
+            </ion-item>
+
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit">Register</button>
+          <button ion-button class="register-btn" block clear (click)="back()" type="button">Back</button>
+        </ion-col>
+      </ion-row>
+
+    </form>
+  </div>
+</ion-content>

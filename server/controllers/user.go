@@ -45,7 +45,7 @@ func (controller *UserController) Get(c *gin.Context) {
 // Edit is a method to edit a education upon a request
 func (controller *UserController) Edit(c *gin.Context) {
 	var user models.User
-	err := c.ShouldBind(&user)
+	err := c.ShouldBindJSON(&user)
 	if err != nil {
 		controller.HandleError(c, err)
 		return

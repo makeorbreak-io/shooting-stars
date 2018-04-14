@@ -46,6 +46,11 @@ func (service *AuthService) GenerateAuthToken(userID uint) (*models.AuthToken, e
 	return &authToken, nil
 }
 
+// ValidateLogin checks if the password matches the user hashed password
+func (service *AuthService) ValidateLogin(password string, user *models.User) error {
+	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
+}
+
 // GenerateRandomBytes returns securely generated random bytes.
 func (service *AuthService) generateRandomBytes(n int) ([]byte, error) {
 	b := make([]byte, n)
@@ -61,9 +66,4 @@ func (service *AuthService) generateRandomBytes(n int) ([]byte, error) {
 func (service *AuthService) generateRandomString(s int) (string, error) {
 	b, err := service.generateRandomBytes(s)
 	return base64.URLEncoding.EncodeToString(b), err
-}
-
-// ValidateLogin checks if the password matches the user hashed password
-func (service *AuthService) ValidateLogin(password string, user *models.User) error {
-	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 }
