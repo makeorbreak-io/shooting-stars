@@ -113,13 +113,18 @@ export class GamePage {
 
   startMatch() : void {
     this.backgroundMode.unlock()
-    this.vibration.vibrate(3000);
-    
-    // Get the device current acceleration
-    this.deviceMotion.getCurrentAcceleration().then(
-      (a) => this.handleAccelerometer(a),
-      (error: any) => console.log(error)
-    );
+    this.backgroundMode.wakeUp()
+    this.backgroundMode.moveToForeground()
+    this.platform.resume.asObservable().subscribe(() => {
+      //this.nativeAudio.play('westernWhistle', () => {});
+      this.vibration.vibrate(3000);
+      
+      // Get the device current acceleration
+      this.deviceMotion.getCurrentAcceleration().then(
+        (a) => this.handleAccelerometer(a),
+        (error: any) => console.log(error)
+      );
+    });
   }
 
   handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
