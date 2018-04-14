@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the ProfilePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { AuthProvider } from '../../providers/auth/auth';
+import { ApiProvider } from '../../providers/api/api';
+import { getLocaleDayNames } from '@angular/common';
+import { LoginPage } from '../login/login';
+import { App } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -14,12 +12,25 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'profile.html',
 })
 export class ProfilePage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public userData: {} = null;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider, public app: App) {
+    this.getUserData();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
   }
 
+  getUserData() {
+    this.api.get('/user/profile?id=' + this.auth.userID, this.auth.token)
+    .then(data => {
+      console.log(data);
+      this.userData = data;
+    }).catch(err => console.log(err));
+    this.userData = {gender: "M"};
+  }
+
+  logout() {
+    this.auth.resetData();
+    this.app.getRootNav().setRoot(LoginPage);
+  }
 }

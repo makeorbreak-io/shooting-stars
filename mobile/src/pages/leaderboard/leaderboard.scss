@@ -1,3 +1,43 @@
 page-leaderboard {
+    .scroll-content {
+        justify-content: center;
+        display: flex !important;
+        flex-direction: column;
+        align-items: center !important;
+        h1 {
+            font-weight: bolder;
+            color: $red;
+            font-size: 5rem;
+            margin-bottom: 3rem;
+        }
+        div#leaderboard {
+            background: $dark-brown;
+            border-radius: 5px;
+            width: 90%;
+            box-shadow: 3px 2px 2px 2px #333;
+            ion-list {
+                padding-top: 2rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                ion-item {
+                    ion-label {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                    }
+                    margin-bottom: 2rem;
+                    background: $light-brown;
+                    border-radius: 4px;
+                    box-shadow: 2px 2px black;
+                    color: white;
+                    font-weight: bold;
+                }
+            }
 
+            .list-md .item-block .item-inner,
+            .item-md.item-block .item-inner {
+              border-bottom: 0px;
+            }
+        }
+    }
 }

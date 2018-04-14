@@ -16,27 +16,25 @@ export class LoginPage {
   mobileDevice: boolean;
   userCredentials = { email: 'user@email.com', password: '123' };
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider, private nativeAudio: NativeAudio) {
+    console.log(this.auth.getData());
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
   }
 
   login() {
-    console.log('login');
     let json = {
       "email": this.userCredentials.email,
       "password": this.userCredentials.password
     }
     this.api.post('/auth/login', json).then(data => {
       this.auth.setData(data);
-      this.nativeAudio.play('westernWhistle');
       this.navCtrl.setRoot(TabsPage, { animate: true, direction: 'forward' });
     })
       .catch(err => {
         console.log(err)
       });
-  }
+  }t
 
   createAccount() {
     this.navCtrl.setRoot(RegisterPage);

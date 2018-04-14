@@ -1,3 +1,64 @@
 page-profile {
+    .toolbar-background-md {
+        background: $dark-brown;
+    }
+    .toolbar-title-md {
+        color: white;
+        font-weight: bolder;
+    }
+    .scroll-content {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        ion-img {
+            width: 15rem;
+            height: 15rem;
+            background: transparent;
+            margin-bottom: 4rem;
+            img {
+                border-radius: 50%;
+            }
+        }
+        #profile {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            background: $dark-brown;
+            width: 90%;
+            border-radius: 5px;
+            box-shadow: 3px 2px 2px 2px #333;
+            padding-bottom: 2rem;
+            padding-top: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            .name {
+                font-size: 2rem;
+                font-weight: bolder;
+                color: white;
+                margin-bottom: 1rem;
+            }
+            #profile-content {
+                width: 100%;
+                .profile-item {
+                    margin-top: 1rem;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    color: white;
+                }
+            }
+        }
+        #leave {
+          .logout-btn {
+            margin-top: 2rem;
+            background: white;
+            ion-icon {
+              color: $red;
+            }
+          }
+        }
 
+    }
 }

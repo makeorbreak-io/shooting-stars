@@ -8,6 +8,7 @@ export class AuthProvider {
   deletedAt: string = "";
   token: string = "";
   userID: string = "";
+  gender: string = "";
 
   setData(data: any) {
     this.id = data.id;
@@ -16,6 +17,9 @@ export class AuthProvider {
     this.deletedAt = data.deletedAt;
     this.token = data.token;
     this.userID = data.userID;
+    if (data.gender)
+      this.gender = data.gender;
+    else this.gender = Math.round(Math.random()) ? "M" : "F";
   }
 
   getData() {
@@ -25,8 +29,19 @@ export class AuthProvider {
       "updatedAt": this.updatedAt,
       "deletedAt": this.deletedAt,
       "token": this.token,
-      "userID": this.userID
+      "userID": this.userID,
+      "gender": this.gender
     }
+  }
+
+  resetData() {
+    this.id = "";
+    this.createdAt = "";
+    this.updatedAt = "";
+    this.deletedAt = "";
+    this.token = "";
+    this.userID = "";
+    this.gender = "";
   }
 
 }

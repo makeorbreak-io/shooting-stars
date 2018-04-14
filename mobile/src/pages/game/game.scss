@@ -1,3 +1,15 @@
 page-game {
+  .scroll-content {
+      justify-content: center;
+      display: flex !important;
+      align-items: center !important;
+
+      .start {
+        background: green;
+      }
+      .stop {
+        background: $red;
+      }
+  }
 
 }

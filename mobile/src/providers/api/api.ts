@@ -27,4 +27,18 @@ export class ApiProvider {
         });
     })
   }
+
+  get(path: string, token: string) {
+    let headers: HttpHeaders = new HttpHeaders({
+      'Authorization': token
+    });
+    return new Promise((resolve, reject) => {
+      this.http.get(this.globals.API_URL + path, {headers: headers})
+      .subscribe(res => {
+        resolve(res);
+      }, err => {
+        reject(err);
+      })
+    })
+  }
 }
