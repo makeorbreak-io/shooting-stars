@@ -16,13 +16,19 @@ type MatchMakingTask struct {
 
 // Run executes the match making task
 func (task *MatchMakingTask) Run() {
-	activeUsers, err := task.LocationService.GetActiveUsers()
+	activeUsersIDs, err := task.LocationService.GetActiveUsers(99999)
 	if err != nil {
-		log.Printf("Error: %v", err)
+		log.Printf("Error when getting active users: %v", err)
 		return
 	}
 
-	for _, user := range activeUsers {
-		log.Printf("Active user: %v", user)
+	for _, userID := range activeUsersIDs {
+		nearestUserLocation, err := task.LocationService.GetNearestUserLocation(userID)
+		if err != nil {
+			log.Printf("Error when getting nearest user location: %v", err)
+			continue
+		}
+
+		log.Printf("Nearest user is %d for user %d", nearestUserLocation.UserID, userID)
 	}
 }
