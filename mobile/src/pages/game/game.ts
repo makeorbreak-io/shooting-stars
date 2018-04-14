@@ -1,5 +1,6 @@
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
@@ -7,6 +8,7 @@ import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Vibration } from '@ionic-native/vibration';
 
 /**
  * Generated class for the GamePage page.
@@ -19,6 +21,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'page-game',
   templateUrl: 'game.html',
+  providers: [ Vibration ]
 })
 export class GamePage {
   private mobileDevice: boolean
@@ -28,10 +31,12 @@ export class GamePage {
     public authProvider: AuthProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
+    private backgroundMode: BackgroundMode,
     private backgroundGeolocation: BackgroundGeolocation,
     public platform: Platform,
     private gyroscope: Gyroscope,
-    private deviceMotion: DeviceMotion) {
+    private deviceMotion: DeviceMotion,
+    private vibration: Vibration) {
       if (this.platform.is('cordova')) {
         this.mobileDevice = true
       } else {
@@ -43,7 +48,7 @@ export class GamePage {
           stationaryRadius: 0,
           distanceFilter: 0,
           debug: true,
-          interval: 5000,
+          interval: 30,
           notificationTitle: 'Shooting Stars',
           notificationText: 'Game is running, be prepared for combat!',
           startOnBoot: true,
@@ -92,34 +97,45 @@ export class GamePage {
   }
 
   startMatch() : void {
-    let options: GyroscopeOptions = {
-      frequency: 1000
-    };
-   
-    this.gyroscope.getCurrent(options)
-      .then((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-      })
-      .catch()
-   
-    let gyroscopeSubscription = this.gyroscope.watch(options)
-      .subscribe((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-      });
+    this.backgroundMode.enable();
+    this.vibration.vibrate(3000);
     
     // Get the device current acceleration
     this.deviceMotion.getCurrentAcceleration().then(
-      (acceleration: DeviceMotionAccelerationData) => console.log(acceleration),
+      this.handleAccelerometer,
       (error: any) => console.log(error)
     );
+  }
 
-    // Watch device acceleration
-    var accelerometerSubscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-      console.log('acceleration', acceleration);
-    });
+  handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
+    console.log('acceleration', acceleration);
+    if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 2 && Math.abs(acceleration.z) <= 2) {
+      let options: GyroscopeOptions = {
+        frequency: 30
+      };
+      this.gyroscope.getCurrent(options)
+      .then((orientation: GyroscopeOrientation) => {
+        if (Math.hypot(orientation.x, orientation.y, orientation.z) <= 1) {
+          this.shoot()
+        } else {
+          this.deviceMotion.getCurrentAcceleration().then(
+            this.handleAccelerometer,
+            (error: any) => console.log(error)
+          );
+        }
+      })
+      .catch()
+    } else {
+      this.deviceMotion.getCurrentAcceleration().then(
+        this.handleAccelerometer,
+        (error: any) => console.log(error)
+      );
+    }
+  }
 
-    gyroscopeSubscription.unsubscribe();
-    accelerometerSubscription.unsubscribe();
+  shoot() {
+    this.state = State.WAITING
+    console.log('SHOT A SHERIFF!!!')
   }
 
   endMatch() : void {}

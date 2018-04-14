@@ -10,6 +10,7 @@ import { LoginPage } from '../pages/login/login';
 import { RegisterPage } from '../pages/register/register';
 
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
@@ -47,6 +48,7 @@ import { AuthProvider } from '../providers/auth/auth';
   ],
   providers: [
     BackgroundGeolocation,
+    BackgroundMode,
     DeviceMotion,
     Geolocation,
     Gyroscope,
