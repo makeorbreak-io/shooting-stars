@@ -24,7 +24,7 @@ import { GlobalsProvider } from '../../providers/globals/globals';
 export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig;
-  private socket : WebSocket;
+  private socket: WebSocket;
 
   constructor(
     public api: ApiProvider,
@@ -34,7 +34,6 @@ export class GamePage {
     private backgroundGeolocation: BackgroundGeolocation,
     public platform: Platform,
     private gyroscope: Gyroscope,
-<<<<<<< HEAD
     private deviceMotion: DeviceMotion,
     private globals: GlobalsProvider) {
     if (this.platform.is('cordova')) {
@@ -58,41 +57,20 @@ export class GamePage {
     let game = this;
 
     this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
-    this.socket.onopen = function() {
-      this.send(JSON.stringify({message: 'hello server'}));
+    this.socket.onopen = function () {
+      this.send(JSON.stringify({ message: 'hello server' }));
       console.log('sent');
     }
 
-    this.socket.onmessage = function(event) {
+    this.socket.onmessage = function (event) {
       let m = JSON.parse(event.data);
       console.log("Received message", m.message);
       game.startPlaying();
     }
 
-    this.socket.onerror = function(err) {
+    this.socket.onerror = function (err) {
       console.log(err);
     }
-=======
-    private deviceMotion: DeviceMotion) {
-      if (this.platform.is('cordova')) {
-        this.mobileDevice = true
-      } else {
-        this.mobileDevice = false
-      }
-      if (this.mobileDevice) {
-        this.backgroundGeolocationConfig = {
-          desiredAccuracy: 0,
-          stationaryRadius: 0,
-          distanceFilter: 0,
-          debug: true,
-          interval: 5000,
-          notificationTitle: 'Shooting Stars',
-          notificationText: 'Game is running, be prepared for combat!',
-          startOnBoot: true,
-          stopOnTerminate: false,
-        };
-      }
->>>>>>> fe9840a7c9e08e1e766b0a4444eb4056c3338d59
   }
 
   ionViewDidLoad() {
@@ -163,20 +141,7 @@ export class GamePage {
     accelerometerSubscription.unsubscribe();
   }
 
-<<<<<<< HEAD
-  endMatch(): void {
-    this.socket.close();
-  }
-
-
-
-
-
-
-
-
-=======
-  endMatch() : void {}
+  endMatch(): void { }
 
   private updateLocation(latitude: number, longitude: number, speed: number): void {
     this.api.post('/locations/' + this.authProvider.userID, {
@@ -190,5 +155,4 @@ export class GamePage {
         console.error(error);
       });
   }
->>>>>>> fe9840a7c9e08e1e766b0a4444eb4056c3338d59
 }
