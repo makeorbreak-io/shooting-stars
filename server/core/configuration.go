@@ -20,6 +20,7 @@ type Configuration struct {
 	MaxLocationLastUpdate uint   `json:"maxLocationLastUpdate"`
 	MatchTimeout          uint   `json:"matchTimeout"`
 	MatchMakingInterval   uint   `json:"matchMakingInterval"`
+	LeaderBoardSize       uint   `json:"leaderBoardSize"`
 }
 
 // GetConfiguration returns the configuration

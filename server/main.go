@@ -103,6 +103,9 @@ func main() {
 		&controllers.MatchController{
 			MatchService: matchService,
 		},
+		&controllers.StatsController{
+			UserService: userService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},

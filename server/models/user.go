@@ -17,12 +17,21 @@ type User struct {
 	Wins         uint      `json:"wins" gorm:"default:0"`
 }
 
+// UserRank is the model that holds a rank of a user
+type UserRank struct {
+	Name   string `json:"name"`
+	Wins   uint   `json:"wins"`
+	UserID uint   `json:"userID"`
+	Rank   uint   `json:"rank"`
+}
+
 // IUserService is the service for users
 type IUserService interface {
 	CreateTable() error
 	Get(id uint) (*User, error)
 	GetByEmail(email string) (*User, error)
 	GetAll() ([]*User, error)
+	GetUsersMostWins(limit uint) ([]*User, error)
 	Create(user *User) (uint, error)
 	Update(user *User) error
 	Delete(id uint) error

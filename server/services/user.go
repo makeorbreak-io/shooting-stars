@@ -60,6 +60,18 @@ func (service *UserService) GetAll() ([]*models.User, error) {
 	return result, nil
 }
 
+// GetUsersMostWins returns the users with most wins
+func (service *UserService) GetUsersMostWins(limit uint) ([]*models.User, error) {
+	var result []*models.User
+	db := service.Database.Order("wins DESC").Limit(limit).Find(&result)
+
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return result, nil
+}
+
 // Create saves a new user in the database
 func (service *UserService) Create(user *models.User) (uint, error) {
 	if !service.Database.NewRecord(user) {
