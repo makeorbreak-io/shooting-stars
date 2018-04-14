@@ -2,6 +2,7 @@ import { AuthProvider } from '../../providers/auth/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { HTTP } from '@ionic-native/http'
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -21,22 +22,28 @@ import { Platform } from 'ionic-angular';
 export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig
-  constructor(public authProvider: AuthProvider, public navCtrl: NavController, public navParams: NavParams,
-    private backgroundGeolocation: BackgroundGeolocation, public platform: Platform,
-    private gyroscope: Gyroscope, private deviceMotion: DeviceMotion) {
+  constructor(
+    public authProvider: AuthProvider,
+    public http: HTTP,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private backgroundGeolocation: BackgroundGeolocation,
+    public platform: Platform,
+    private gyroscope: Gyroscope,
+    private deviceMotion: DeviceMotion) {
       if (this.platform.is('cordova')) {
         this.mobileDevice = true
-        this.platform.ready().then(() => this.onCordovaReady())
       } else {
         this.mobileDevice = false
       }
-      '/locations/:id'
       if (this.mobileDevice) {
         this.backgroundGeolocationConfig = {
-          desiredAccuracy: 10,
-          stationaryRadius: 20,
-          distanceFilter: 30,
-          debug: false,
+          desiredAccuracy: 0,
+          stationaryRadius: 0,
+          distanceFilter: 0,
+          debug: true,
+          notificationTitle: 'Shooting Stars',
+          notificationText: 'Game is running, be prepared for combat!',
           startOnBoot: true,
           stopOnTerminate: false,
         };
@@ -45,6 +52,9 @@ export class GamePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GamePage');
+    if (this.mobileDevice) {
+      this.platform.ready().then(() => this.onCordovaReady())
+    }
   }
 
   onCordovaReady() {
@@ -57,6 +67,17 @@ export class GamePage {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
     }
+    this.http.post('https://shooting-stars.herokuapp.com/locations/' + this.authProvider.userID, {
+      'latitude': 1,
+      'longitude': 1
+      }, {
+        'Authorization': this.authProvider.token
+      })
+      .then(data => {
+        console.log(data.data);
+      }).catch(error => {
+        console.log(error.status);
+      });
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
       console.log(location.coords)
@@ -97,10 +118,12 @@ export class GamePage {
 
     // Watch device acceleration
     var accelerometerSubscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-      console.log(acceleration);
+      console.log('acceleration', acceleration);
     });
 
     gyroscopeSubscription.unsubscribe();
     accelerometerSubscription.unsubscribe();
   }
+
+  endMatch() : void {}
 }
