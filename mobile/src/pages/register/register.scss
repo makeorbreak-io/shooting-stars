@@ -1,6 +1,6 @@
-page-login {
+page-register {
 
-  .login-content {
+  .register-content {
     background: $light-yellow;
 
     .logo-row {
@@ -8,7 +8,7 @@ page-login {
       padding-bottom: 20px;
     }
 
-    .login-box {
+    .register-box {
       background: $light-brown;
       padding: 20px 20px 0px 20px;
       margin-top: 30px;
@@ -45,11 +45,15 @@ page-login {
        border-radius: 30px !important;
        border: 1px solid #ffffff;
      }
-
+     .back-btn {
+      background: $light-brown;
+      border: 1px solid #ffffff;
+    }
      .register-btn {
        color: #ffffff;
        font-size: 0.8em;
      }
+
   }
 
 }
