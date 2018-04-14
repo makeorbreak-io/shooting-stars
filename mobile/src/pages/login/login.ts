@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { Platform } from 'ionic-angular';
 import { GamePageModule } from '../game/game.module';
 import { GamePage } from '../game/game';
+import { RegisterPage } from '../register/register';
+import { ApiProvider } from '../../providers/api/api';
+import { AuthProvider } from '../../providers/auth/auth';
+import { TabsPage } from '../tabs/tabs';
+
 
 @IonicPage()
 @Component({
@@ -11,16 +16,39 @@ import { GamePage } from '../game/game';
   templateUrl: 'login.html',
 })
 export class LoginPage {
-  mobileDevice: boolean
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+
+  mobileDevice: boolean;
+  userCredentials = { email: '', password: '' };
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
   }
 
-  onLoginSuccessfull() {
-    this.navCtrl.setRoot(GamePage);
+
+
+  login() {
+    console.log('login');
+    let json = {
+      "email": this.userCredentials.email,
+      "password": this.userCredentials.password
+    }
+    this.api.post('/auth/login', json).then(data => {
+      this.auth.setData(data);
+      console.log(this.auth.getData());
+      this.navCtrl.setRoot(TabsPage, { animate: true, direction: 'forward' });
+    })
+
+      .catch(err => {
+        console.log(err)
+      });
   }
+
+  createAccount() {
+    console.log("createAccount");
+    this.navCtrl.setRoot(RegisterPage);
+  }
+
 
 }
