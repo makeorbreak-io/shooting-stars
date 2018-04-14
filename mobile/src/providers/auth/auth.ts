@@ -34,4 +34,14 @@ export class AuthProvider {
     }
   }
 
+  resetData() {
+    this.id = "";
+    this.createdAt = "";
+    this.updatedAt = "";
+    this.deletedAt = "";
+    this.token = "";
+    this.userID = "";
+    this.gender = "";
+  }
+
 }

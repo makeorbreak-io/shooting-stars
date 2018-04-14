@@ -16,6 +16,7 @@ export class LoginPage {
   mobileDevice: boolean;
   userCredentials = { email: 'user@email.com', password: '123' };
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider, private nativeAudio: NativeAudio) {
+    console.log(this.auth.getData());
   }
 
   ionViewDidLoad() {
@@ -29,6 +30,7 @@ export class LoginPage {
       "password": this.userCredentials.password
     }
     this.api.post('/auth/login', json).then(data => {
+      console.log(data);
       this.auth.setData(data);
       this.navCtrl.setRoot(TabsPage, { animate: true, direction: 'forward' });
     })

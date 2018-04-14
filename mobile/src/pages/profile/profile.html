@@ -1,9 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Profile</ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
   <ion-img *ngIf="userData.gender === 'M'" src="../../assets/imgs/cowboy.png" alt=""></ion-img>
   <ion-img *ngIf="userData.gender === 'F'" src="../../assets/imgs/cowgirl.png" alt=""></ion-img>
   <div id="profile">
-    <div class="name">nome</div>
-
+    <div class="name">Manuela Aguiar</div>
+    <div id="profile-content">
+      <div class="profile-item">
+        <span>Email:</span>
+        <span>lalala@gmail.com</span>
+      </div>
+      <div class="profile-item">
+        <div>Gender:</div>
+        <div>Shemale</div>
+      </div>
+      <div class="profile-item">
+        <span>Wins:</span>
+        <span>-1</span>
+      </div>
+    </div>
   </div>
-
+  <div id="leave">
+    <button ion-button class="logout-btn" (click)="logout()">
+      <ion-icon name="log-out"></ion-icon>
+    </button>
+  </div>
 </ion-content>

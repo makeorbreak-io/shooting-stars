@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthProvider } from '../../providers/auth/auth';
 import { ApiProvider } from '../../providers/api/api';
 import { getLocaleDayNames } from '@angular/common';
+import { LoginPage } from '../login/login';
+import { App } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -11,13 +13,11 @@ import { getLocaleDayNames } from '@angular/common';
 })
 export class ProfilePage {
   public userData: {} = null;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider) {
-
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider, public app: App) {
     this.getUserData();
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
   }
 
   getUserData() {
@@ -26,6 +26,11 @@ export class ProfilePage {
       console.log(data);
       this.userData = data;
     }).catch(err => console.log(err));
-    this.userData = {gender: "F"};
+    this.userData = {gender: "M"};
+  }
+
+  logout() {
+    this.auth.resetData();
+    this.app.getRootNav().setRoot(LoginPage);
   }
 }
