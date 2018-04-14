@@ -48,12 +48,12 @@ func main() {
 	}
 
 	// Verbose
-	if config.Verbose {
-		gin.SetMode(gin.DebugMode)
-		database.LogMode(true)
-	} else {
+	if config.Production {
 		gin.SetMode(gin.ReleaseMode)
 		database.LogMode(false)
+	} else {
+		gin.SetMode(gin.DebugMode)
+		database.LogMode(true)
 	}
 
 	// Create services
