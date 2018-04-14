@@ -127,6 +127,8 @@ export class GamePage {
     });
   }
 
+
+
   handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
     console.log('acceleration', acceleration);
     if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 2 && Math.abs(acceleration.z) <= 2) {
@@ -155,6 +157,13 @@ export class GamePage {
 
   shoot() {
     console.log('SHOT A SHERIFF!!!')
+    this.api.post('/shoot/' + this.authProvider.userID, {
+    })
+    .then(data => {
+      console.log(data);
+    }).catch((error: HttpErrorResponse) => {
+      console.error(error);
+    });
   }
 
   endMatch(): void { }
@@ -165,10 +174,10 @@ export class GamePage {
       "longitude": longitude,
       "speed": speed
     })
-      .then(data => {
-        console.log(data);
-      }).catch((error: HttpErrorResponse) => {
-        console.error(error);
-      });
+    .then(data => {
+      console.log(data);
+    }).catch((error: HttpErrorResponse) => {
+      console.error(error);
+    });
   }
 }
