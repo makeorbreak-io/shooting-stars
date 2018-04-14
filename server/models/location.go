@@ -15,8 +15,9 @@ type UpdateLocationRequest struct {
 type Location struct {
 	core.Model
 
-	UserID   uint      `json:"userID" gorm:"unique"`
-	Location geo.Point `json:"location" gorm:"type:geography"`
+	UserID     uint      `json:"userID" gorm:"unique"`
+	LocationDB string    `json:"-" gorm:"column:location;type:geography"`
+	Location   geo.Point `json:"location" gorm:"-"`
 }
 
 // ILocationService is the service for locations
