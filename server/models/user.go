@@ -14,6 +14,7 @@ type User struct {
 	PasswordHash string    `json:"password"`
 	BirthDate    date.Date `json:"birthDate"`
 	Gender       string    `json:"gender"`
+	Wins         uint      `json:"wins" gorm:"default:0"`
 }
 
 // IUserService is the service for users
