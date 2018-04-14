@@ -34,6 +34,7 @@ func main() {
 	// Setup router
 	router := gin.Default()
 	router.Use(middlewares.HandleExecutionErrors())
+	router.Use(middlewares.HandleCors())
 
 	// Setup database connection
 	database, err := gorm.Open(config.DatabaseType, config.DatabaseConnection)
