@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // CORSHandler adds the necessary CORS headers to an answer, and handles
@@ -19,6 +20,7 @@ func HandleCors() gin.HandlerFunc {
 
 		// Stop here if its Preflighted OPTIONS request
 		if c.Request.Method == "OPTIONS" {
+			c.Status(http.StatusOK)
 			return
 		}
 
