@@ -43,6 +43,7 @@ export class GamePage {
           stationaryRadius: 0,
           distanceFilter: 0,
           debug: true,
+          interval: 5000,
           notificationTitle: 'Shooting Stars',
           notificationText: 'Game is running, be prepared for combat!',
           startOnBoot: true,
@@ -68,25 +69,14 @@ export class GamePage {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
     }
-    console.log('Math starting.')
-    let json = {
-      "latitude": 41.157944,
-      "longitude": -8.629105
-    }
-    this.api.post('/locations/' + this.authProvider.userID, {
-      "latitude": 41.157944,
-      "longitude": -8.629105
-    })
-      .then(data => {
-        console.log('aaaa')
-        console.log(data);
-      }).catch((error: HttpErrorResponse) => {
-        console.log('bbbb')
-        console.log(error);
-      });
+    console.log('Match starting.')
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
-      console.log(location.coords)
+      console.log(location.latitude, location.longitude, location.speed)
+      if (!location.speed) {
+        location.speed = 0
+      }
+      this.updateLocation(location.latitude, location.longitude, location.speed)
       this.backgroundGeolocation.finish();
     }, (error: any) => {
       console.error(error)
@@ -133,4 +123,17 @@ export class GamePage {
   }
 
   endMatch() : void {}
+
+  private updateLocation(latitude: number, longitude: number, speed: number): void {
+    this.api.post('/locations/' + this.authProvider.userID, {
+      "latitude": latitude,
+      "longitude": longitude,
+      "speed": speed
+    })
+      .then(data => {
+        console.log(data);
+      }).catch((error: HttpErrorResponse) => {
+        console.error(error);
+      });
+  }
 }
