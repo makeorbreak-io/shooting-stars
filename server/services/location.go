@@ -4,7 +4,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"github.com/paulmach/go.geo"
-	"log"
 )
 
 // Ensure LocationService implements ILocationService.
@@ -48,7 +47,6 @@ func (service *LocationService) Get(userID uint) (*models.Location, error) {
 	}
 
 	result.Location = location.Location
-	log.Printf("Location: %v", result.Location)
 
 	return &result, nil
 }
