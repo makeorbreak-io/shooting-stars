@@ -14,6 +14,10 @@ var (
 	// ErrorNotFound is thrown when a user tries to access an object
 	// that does not exist
 	ErrorNotFound = errors.New("NOT_FOUND")
+	// ErrorNotLogged is thrown when the user is not logged
+	ErrorNotLogged = errors.New("NOT_LOGGED")
+	// ErrorNoPermission is thrown when the user does not have permission
+	ErrorNoPermission = errors.New("NO_PERMISSION")
 	// ErrorBadLogin is thrown when the login credentials are invalid
 	ErrorBadLogin = errors.New("BAD_LOGIN")
 	// ErrorPasswordsDontMatch is thrown when the register passwords don't match
@@ -22,4 +26,6 @@ var (
 	ErrorInvalidGender = errors.New("INVALID_GENDER")
 	// ErrorEmailAlreadyExists is thrown when the register email is already registered
 	ErrorEmailAlreadyExists = errors.New("EMAIL_ALREADY_EXISTS")
+	// ErrorNotInMatch is thrown when the user is not in a match
+	ErrorNotInMatch = errors.New("NOT_IN_MATCH")
 )

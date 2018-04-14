@@ -27,9 +27,20 @@ func (controller *UserController) LoadRoutes(r *gin.RouterGroup) {
 
 // Get is a method to get an user
 func (controller *UserController) Get(c *gin.Context) {
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
+		return
+	}
+
+	// Check if getting logged user
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 
@@ -51,17 +62,27 @@ func (controller *UserController) Edit(c *gin.Context) {
 		return
 	}
 
-	// Check if editing the education of the request
-	id, err := controller.GetRequestID(c)
+	// Check if editing the user of the request
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return
 	}
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
+		return
+	}
 	if id != user.ID {
 		controller.HandleError(c, core.ErrorBadRequest)
+		return
 	}
 
-	// Update the education
+	// Update the user
 	err = controller.UserService.Update(&user)
 	if err != nil {
 		controller.HandleError(c, err)
@@ -73,9 +94,20 @@ func (controller *UserController) Edit(c *gin.Context) {
 
 // Delete is a method to delete a education upon a request
 func (controller *UserController) Delete(c *gin.Context) {
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
+		return
+	}
+
+	// Check if deleting logged user
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 

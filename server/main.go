@@ -9,6 +9,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/middlewares"
 	"github.com/makeorbreak-io/shooting-stars/server/services"
+	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"log"
 	"os"
 	"strconv"
@@ -77,20 +78,45 @@ func main() {
 		userService.CreateTable()
 	}
 
-	// Load all controllers
+	// Router groups
+	routerBaseGroup := router.Group("")
+	routerPublicGroup := routerBaseGroup.Group("")
+	routerAuthenticatedGroup := routerBaseGroup.Group("")
+	routerAuthenticatedGroup.Use(middlewares.HandleAuthentication(authService))
+
+	// Load all public controllers
 	ctrls := []core.IController{
 		&controllers.AuthController{
 			AuthService: authService,
 			UserService: userService,
 		},
+	}
+	for _, controller := range ctrls {
+		controller.LoadRoutes(routerPublicGroup)
+	}
+
+	// Load all authenticated controllers
+	ctrls = []core.IController{
+		&controllers.LocationController{
+			LocationService: locationService,
+		},
+		&controllers.MatchController{
+			MatchService: matchService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},
 	}
-	routerBaseGroup := router.Group("")
 	for _, controller := range ctrls {
-		controller.LoadRoutes(routerBaseGroup)
+		controller.LoadRoutes(routerAuthenticatedGroup)
 	}
+
+	// Start tasks
+	matchMakingTask := tasks.MatchMakingTask{
+		LocationService: locationService,
+		MatchService:    matchService,
+	}
+	matchMakingTask.Run()
 
 	// Start the server
 	router.Run(":" + strconv.Itoa(config.Port))

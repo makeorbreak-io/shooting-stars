@@ -36,6 +36,21 @@ func (service *MatchService) Get(id uint) (*models.Match, error) {
 	return &result, nil
 }
 
+// GetActiveMatchByUserID returns the active match of a user ID
+func (service *MatchService) GetActiveMatchByUserID(userID uint) (*models.Match, error) {
+	var result models.Match
+	db := service.Database.
+		Where("user_one_id = ? OR user_two_id = ?", userID, userID).
+		Where("user_one_shoot_time = ? OR user_two_shoot_time = ?", nil, nil).
+		First(&result)
+
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return &result, nil
+}
+
 // GetAll returns all matches
 func (service *MatchService) GetAll() ([]*models.Match, error) {
 	var result []*models.Match

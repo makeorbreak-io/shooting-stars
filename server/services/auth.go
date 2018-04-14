@@ -26,9 +26,21 @@ func (service *AuthService) CreateTable() error {
 	return service.Database.CreateTable(&models.AuthToken{}).Error
 }
 
+// GetUserIDByToken returns the user ID associated with the token
+func (service *AuthService) GetUserIDByToken(token string) (uint, error) {
+	var result models.AuthToken
+	db := service.Database.First(&result, "token = ?", token)
+
+	if db.Error != nil {
+		return 0, db.Error
+	}
+
+	return result.UserID, nil
+}
+
 // GenerateAuthToken generates an authentication token for a given user ID
 func (service *AuthService) GenerateAuthToken(userID uint) (*models.AuthToken, error) {
-	token, err := service.generateRandomString(32)
+	token, err := service.generateRandomString(128)
 	if err != nil {
 		return nil, err
 	}

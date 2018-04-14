@@ -13,12 +13,14 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
+import { HTTP } from '@ionic-native/http'
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ApiProvider } from '../providers/api/api';
 import { HttpClientModule} from '@angular/common/http';
 import { GlobalsProvider } from '../providers/globals/globals';
 import { AuthProvider } from '../providers/auth/auth';
+import { Push } from '@ionic-native/push';
 
 @NgModule({
   declarations: [
@@ -48,13 +50,15 @@ import { AuthProvider } from '../providers/auth/auth';
     DeviceMotion,
     Geolocation,
     Gyroscope,
+    HTTP,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     HttpClientModule,
     GlobalsProvider,
-    AuthProvider
+    AuthProvider,
+    Push
   ]
 })
 export class AppModule {}

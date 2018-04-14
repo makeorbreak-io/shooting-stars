@@ -14,7 +14,7 @@ import { TabsPage } from '../tabs/tabs';
 export class LoginPage {
 
   mobileDevice: boolean;
-  userCredentials = { email: '', password: '' };
+  userCredentials = { email: 'user@email.com', password: '123' };
   constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider) {
   }
 

@@ -20,6 +20,7 @@ type Match struct {
 type IMatchService interface {
 	CreateTable() error
 	Get(id uint) (*Match, error)
+	GetActiveMatchByUserID(userID uint) (*Match, error)
 	GetAll() ([]*Match, error)
 	Create(match *Match) (uint, error)
 	Update(match *Match) error
