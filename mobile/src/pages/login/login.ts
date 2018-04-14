@@ -24,8 +24,6 @@ export class LoginPage {
     console.log('ionViewDidLoad LoginPage');
   }
 
-
-
   login() {
     console.log('login');
     let json = {

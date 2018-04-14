@@ -40,6 +40,8 @@
     "cordova-android": "7.0.0",
     "cordova-browser": "5.0.3",
     "cordova-plugin-device": "^2.0.1",
+    "cordova-plugin-device-motion": "^1.2.5",
+    "cordova-plugin-gyroscope": "^0.1.4",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.2.0",
     "cordova-plugin-mauron85-background-geolocation": "^2.3.5",
@@ -65,7 +67,9 @@
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
       "cordova-plugin-mauron85-background-geolocation": {},
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-gyroscope": {},
+      "cordova-plugin-device-motion": {}
     },
     "platforms": [
       "android",

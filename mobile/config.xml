@@ -87,5 +87,7 @@
     <engine name="browser" spec="5.0.3" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
     <allow-navigation href="http://172.29.11.163:8100" />
+    <plugin name="cordova-plugin-gyroscope" spec="^0.1.4" />
     <plugin name="cordova-plugin-mauron85-background-geolocation" spec="^2.3.5" />
+    <plugin name="cordova-plugin-device-motion" spec="^1.2.5" />
 </widget>
