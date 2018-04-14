@@ -21,7 +21,6 @@ import { ApiProvider } from '../providers/api/api';
 import { HttpClientModule} from '@angular/common/http';
 import { GlobalsProvider } from '../providers/globals/globals';
 import { AuthProvider } from '../providers/auth/auth';
-import { Push } from '@ionic-native/push';
 
 @NgModule({
   declarations: [
@@ -59,8 +58,7 @@ import { Push } from '@ionic-native/push';
     ApiProvider,
     HttpClientModule,
     GlobalsProvider,
-    AuthProvider,
-    Push
+    AuthProvider
   ]
 })
 export class AppModule {}
