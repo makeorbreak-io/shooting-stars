@@ -21,9 +21,9 @@ export class ProfilePage {
   }
 
   getUserData() {
-    this.api.get('/user/profile?id=' + this.auth.userID, this.auth.token)
+    this.api.get('/users/' + this.auth.userID, this.auth.token)
     .then(data => {
-      console.log(data);
+      console.log(data["name"]);
       this.userData = data;
     }).catch(err => console.log(err));
     this.userData = {gender: "M"};

@@ -8,19 +8,19 @@
   <ion-img *ngIf="userData.gender === 'M'" src="../../assets/imgs/cowboy.png" alt=""></ion-img>
   <ion-img *ngIf="userData.gender === 'F'" src="../../assets/imgs/cowgirl.png" alt=""></ion-img>
   <div id="profile">
-    <div class="name">Manuela Aguiar</div>
+    <div class="name">{{userData.name}}</div>
     <div id="profile-content">
       <div class="profile-item">
         <span>Email:</span>
-        <span>lalala@gmail.com</span>
+        <span>{{userData.email}}</span>
       </div>
       <div class="profile-item">
         <div>Gender:</div>
-        <div>Shemale</div>
+        <div>{{userData.gender}}</div>
       </div>
       <div class="profile-item">
         <span>Wins:</span>
-        <span>-1</span>
+        <span>{{userData.wins}}</span>
       </div>
     </div>
   </div>
