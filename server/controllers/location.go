@@ -38,9 +38,13 @@ func (controller *LocationController) Update(c *gin.Context) {
 		controller.HandleError(c, err)
 		return
 	}
-	sessionID := uint(1) // TODO: Check if logged user ID is the same as the request
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
 	if id != sessionID {
-		controller.HandleError(c, core.ErrorBadRequest)
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 

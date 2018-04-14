@@ -33,6 +33,17 @@ func (controller *UserController) Get(c *gin.Context) {
 		return
 	}
 
+	// Check if getting logged user
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
+		return
+	}
+
 	user, err := controller.UserService.Get(id)
 	if err != nil {
 		controller.HandleError(c, err)
@@ -57,6 +68,15 @@ func (controller *UserController) Edit(c *gin.Context) {
 		controller.HandleError(c, err)
 		return
 	}
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
+		return
+	}
 	if id != user.ID {
 		controller.HandleError(c, core.ErrorBadRequest)
 		return
@@ -77,6 +97,17 @@ func (controller *UserController) Delete(c *gin.Context) {
 	id, err := controller.GetRequestID(c)
 	if err != nil {
 		controller.HandleError(c, err)
+		return
+	}
+
+	// Check if deleting logged user
+	sessionID, isLogged := c.Get("userID")
+	if !isLogged {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+	if id != sessionID {
+		controller.HandleError(c, core.ErrorNoPermission)
 		return
 	}
 

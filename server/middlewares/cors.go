@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// CORSHandler adds the necessary CORS headers to an answer, and handles
+// HandleCors adds the necessary CORS headers to an answer, and handles
 // the preflight OPTIONS request
 func HandleCors() gin.HandlerFunc {
 	return func(c *gin.Context) {

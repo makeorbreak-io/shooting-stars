@@ -74,6 +74,14 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 		c.AbortWithError(http.StatusBadRequest, ErrorNotFound).
 			SetType(gin.ErrorTypePublic)
 		return
+	case ErrorNotLogged:
+		c.AbortWithError(http.StatusUnauthorized, ErrorNotLogged).
+			SetType(gin.ErrorTypePublic)
+		return
+	case ErrorNoPermission:
+		c.AbortWithError(http.StatusForbidden, ErrorNoPermission).
+			SetType(gin.ErrorTypePublic)
+		return
 	case ErrorBadLogin:
 		c.AbortWithError(http.StatusUnauthorized, ErrorBadLogin).
 			SetType(gin.ErrorTypePublic)
