@@ -9,6 +9,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Vibration } from '@ionic-native/vibration';
+import { GlobalsProvider } from '../../providers/globals/globals';
 
 /**
  * Generated class for the GamePage page.
@@ -25,7 +26,9 @@ import { Vibration } from '@ionic-native/vibration';
 })
 export class GamePage {
   private mobileDevice: boolean
-  private backgroundGeolocationConfig: BackgroundGeolocationConfig
+  private backgroundGeolocationConfig: BackgroundGeolocationConfig;
+  private socket: WebSocket;
+
   constructor(
     public api: ApiProvider,
     public authProvider: AuthProvider,
@@ -36,40 +39,56 @@ export class GamePage {
     public platform: Platform,
     private gyroscope: Gyroscope,
     private deviceMotion: DeviceMotion,
+    private globals: GlobalsProvider,
     private vibration: Vibration) {
-      if (this.platform.is('cordova')) {
-        this.mobileDevice = true
-      } else {
-        this.mobileDevice = false
-      }
-      if (this.mobileDevice) {
-        this.backgroundGeolocationConfig = {
-          desiredAccuracy: 0,
-          stationaryRadius: 0,
-          distanceFilter: 0,
-          debug: true,
-          interval: 30,
-          notificationTitle: 'Shooting Stars',
-          notificationText: 'Game is running, be prepared for combat!',
-          startOnBoot: true,
-          stopOnTerminate: false,
-        };
-      }
+    if (this.platform.is('cordova')) {
+      this.mobileDevice = true
+    } else {
+      this.mobileDevice = false
+    }
+    if (this.mobileDevice) {
+      this.backgroundGeolocationConfig = {
+        desiredAccuracy: 0,
+        stationaryRadius: 0,
+        distanceFilter: 0,
+        debug: true,
+        notificationTitle: 'Shooting Stars',
+        notificationText: 'Game is running, be prepared for combat!',
+        startOnBoot: true,
+        stopOnTerminate: false,
+      };
+    }
+
+    let game = this;
+
+    this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
+    this.socket.onopen = function () {
+      this.send(JSON.stringify({ message: 'hello server' }));
+      console.log('sent');
+    }
+
+    this.socket.onmessage = function (event) {
+      let m = JSON.parse(event.data);
+      console.log("Received message", m.message);
+      game.startPlaying();
+    }
+
+    this.socket.onerror = function (err) {
+      console.log(err);
+    }
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad GamePage');
     if (this.mobileDevice) {
       this.platform.ready().then(() => this.onCordovaReady())
     }
   }
 
   onCordovaReady() {
-    console.log('cordova ready')
     this.startPlaying()
   }
 
-  startPlaying() : void {
+  startPlaying(): void {
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
@@ -86,20 +105,39 @@ export class GamePage {
     }, (error: any) => {
       console.error(error)
     })
-    this.backgroundGeolocation.start()
+    this.backgroundGeolocation.start();
     this.startMatch()
   }
 
-  stopPlaying() : void {
+  stopPlaying(): void {
     if (this.mobileDevice) {
       this.backgroundGeolocation.stop()
     }
   }
 
+<<<<<<< HEAD
   startMatch() : void {
     this.backgroundMode.enable();
     this.vibration.vibrate(3000);
     
+=======
+  startMatch(): void {
+    let options: GyroscopeOptions = {
+      frequency: 1000
+    };
+
+    this.gyroscope.getCurrent(options)
+      .then((orientation: GyroscopeOrientation) => {
+        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
+      })
+      .catch()
+
+    let gyroscopeSubscription = this.gyroscope.watch(options)
+      .subscribe((orientation: GyroscopeOrientation) => {
+        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
+      });
+
+>>>>>>> e1f1918d3461bdb4757589446ec6ec9e74ef2faf
     // Get the device current acceleration
     this.deviceMotion.getCurrentAcceleration().then(
       this.handleAccelerometer,
@@ -138,7 +176,7 @@ export class GamePage {
     console.log('SHOT A SHERIFF!!!')
   }
 
-  endMatch() : void {}
+  endMatch(): void { }
 
   private updateLocation(latitude: number, longitude: number, speed: number): void {
     this.api.post('/locations/' + this.authProvider.userID, {

@@ -116,7 +116,7 @@ func main() {
 		LocationService: locationService,
 		MatchService:    matchService,
 	}
-	matchMakingTask.Run()
+	matchMakingTask.Start(config.MatchMakingInterval)
 
 	// Start the server
 	router.Run(":" + strconv.Itoa(config.Port))
