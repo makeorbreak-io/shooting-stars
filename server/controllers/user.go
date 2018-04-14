@@ -51,7 +51,7 @@ func (controller *UserController) Edit(c *gin.Context) {
 		return
 	}
 
-	// Check if editing the education of the request
+	// Check if editing the user of the request
 	id, err := controller.GetRequestID(c)
 	if err != nil {
 		controller.HandleError(c, err)
@@ -59,9 +59,10 @@ func (controller *UserController) Edit(c *gin.Context) {
 	}
 	if id != user.ID {
 		controller.HandleError(c, core.ErrorBadRequest)
+		return
 	}
 
-	// Update the education
+	// Update the user
 	err = controller.UserService.Update(&user)
 	if err != nil {
 		controller.HandleError(c, err)

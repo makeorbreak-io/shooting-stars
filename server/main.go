@@ -83,6 +83,9 @@ func main() {
 			AuthService: authService,
 			UserService: userService,
 		},
+		&controllers.LocationController{
+			LocationService: locationService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},

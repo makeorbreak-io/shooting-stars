@@ -5,6 +5,12 @@ import (
 	"github.com/paulmach/go.geo"
 )
 
+// UpdateLocationRequest is the model for a location update request
+type UpdateLocationRequest struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}
+
 // Location is the model for locations
 type Location struct {
 	core.Model
