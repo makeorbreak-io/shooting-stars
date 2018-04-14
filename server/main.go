@@ -35,6 +35,11 @@ func main() {
 	router := gin.Default()
 	router.Use(middlewares.HandleExecutionErrors())
 	router.Use(middlewares.HandleCors())
+	// Router groups
+	routerBaseGroup := router.Group("")
+	routerPublicGroup := routerBaseGroup.Group("")
+	routerAuthenticatedGroup := routerBaseGroup.Group("")
+	routerAuthenticatedGroup.Use(middlewares.HandleAuthentication())
 
 	// Setup database connection
 	database, err := gorm.Open(config.DatabaseType, config.DatabaseConnection)
@@ -77,12 +82,19 @@ func main() {
 		userService.CreateTable()
 	}
 
-	// Load all controllers
+	// Load all public controllers
 	ctrls := []core.IController{
 		&controllers.AuthController{
 			AuthService: authService,
 			UserService: userService,
 		},
+	}
+	for _, controller := range ctrls {
+		controller.LoadRoutes(routerPublicGroup)
+	}
+
+	// Load all authenticated controllers
+	ctrls = []core.IController{
 		&controllers.LocationController{
 			LocationService: locationService,
 		},
@@ -90,9 +102,8 @@ func main() {
 			UserService: userService,
 		},
 	}
-	routerBaseGroup := router.Group("")
 	for _, controller := range ctrls {
-		controller.LoadRoutes(routerBaseGroup)
+		controller.LoadRoutes(routerAuthenticatedGroup)
 	}
 
 	// Start the server

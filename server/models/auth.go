@@ -25,13 +25,14 @@ type RegisterRequest struct {
 type AuthToken struct {
 	core.Model
 
-	Token  string `json:"token"`
+	Token  string `json:"token" gorm:"unique"`
 	UserID uint   `json:"userID"`
 }
 
 // IAuthService is the service for authentication
 type IAuthService interface {
 	CreateTable() error
+	GetUserIDByToken(token string) (uint, error)
 	GenerateAuthToken(userID uint) (*AuthToken, error)
 	ValidateLogin(password string, user *User) error
 }

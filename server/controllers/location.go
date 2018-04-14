@@ -38,8 +38,9 @@ func (controller *LocationController) Update(c *gin.Context) {
 		controller.HandleError(c, err)
 		return
 	}
-	sessionID := uint(1) // TODO: Check if logged user ID is the same as the request
-	if id != sessionID {
+	sessionID, exists := c.Get("userID")
+	if !exists ||
+		id != sessionID {
 		controller.HandleError(c, core.ErrorBadRequest)
 		return
 	}
