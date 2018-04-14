@@ -1,3 +1,4 @@
+import { AuthProvider } from '../../providers/auth/auth';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
@@ -20,7 +21,7 @@ import { Platform } from 'ionic-angular';
 export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public authProvider: AuthProvider, public navCtrl: NavController, public navParams: NavParams,
     private backgroundGeolocation: BackgroundGeolocation, public platform: Platform,
     private gyroscope: Gyroscope, private deviceMotion: DeviceMotion) {
       if (this.platform.is('cordova')) {
@@ -29,6 +30,7 @@ export class GamePage {
       } else {
         this.mobileDevice = false
       }
+      '/locations/:id'
       if (this.mobileDevice) {
         this.backgroundGeolocationConfig = {
           desiredAccuracy: 10,
@@ -58,6 +60,7 @@ export class GamePage {
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
       console.log(location.coords)
+      console.log('locations/' + this.authProvider.userID)
       this.backgroundGeolocation.finish();
     });
     this.backgroundGeolocation.start()
