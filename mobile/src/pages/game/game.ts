@@ -22,7 +22,8 @@ import { NativeAudio } from '@ionic-native/native-audio';
 enum State {
   WAITING,
   IN_MATCH,
-  END
+  COOLDOWN,
+  RESTING
 }
 
 @IonicPage()
@@ -35,7 +36,8 @@ export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig;
   private socket: WebSocket;
-  private state: State;
+  private State = State;
+  private state: State = State.RESTING;
   private searching: boolean = false;
   constructor(
     public api: ApiProvider,
@@ -90,6 +92,7 @@ export class GamePage {
   }
 
   ionViewDidLoad() {
+    this.state = State.RESTING
     if (this.mobileDevice) {
       this.platform.ready().then(() => this.startPlaying())
     }
@@ -119,7 +122,7 @@ export class GamePage {
   }
 
   stopPlaying(): void {
-    this.searching = false;
+    this.state = State.RESTING
     if (this.mobileDevice) {
       this.backgroundGeolocation.stop()
     }
@@ -133,43 +136,11 @@ export class GamePage {
     this.platform.resume.asObservable().subscribe(() => {
       this.nativeAudio.play('westernWhistle', () => {});
       this.vibration.vibrate(3000);
-
-      // Get the device current acceleration
-      this.deviceMotion.getCurrentAcceleration().then(
-        (a) => this.handleAccelerometer(a),
-        (error: any) => console.log(error)
-      );
     });
   }
 
-  handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
-    console.log('acceleration', acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp);
-    if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 2 && Math.abs(acceleration.z) <= 2) {
-      let options: GyroscopeOptions = {
-        frequency: 30
-      };
-      this.gyroscope.getCurrent(options)
-      .then((orientation: GyroscopeOrientation) => {
-        if (Math.hypot(orientation.x, orientation.y, orientation.z) <= 1) {
-          this.shoot()
-        } else {
-          this.deviceMotion.getCurrentAcceleration().then(
-            (a) => this.handleAccelerometer(a),
-            (error: any) => console.log(error)
-          );
-        }
-      })
-      .catch()
-    } else {
-      this.deviceMotion.getCurrentAcceleration().then(
-        (a) => this.handleAccelerometer(a),
-        (error: any) => console.log(error)
-      );
-    }
-  }
-
-  shoot() {
-    this.state = State.END;
+  handleSuccessfullShot() {
+    this.state = State.RESTING;
     console.log('SHOT A SHERIFF!!!')
     this.api.post('/shoot/' + this.authProvider.userID, {
     })
@@ -178,6 +149,37 @@ export class GamePage {
     }).catch((error: HttpErrorResponse) => {
       console.error(error);
     });
+  }
+
+  handleMissedShot() {
+    this.state = State.COOLDOWN;
+    setTimeout(() => this.state = State.IN_MATCH, 500)
+  }
+
+  shoot() {
+    this.nativeAudio.play('gunshot', () => {})
+    this.deviceMotion.getCurrentAcceleration().then(
+      (acceleration) => {
+        console.log(acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp)
+        if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 3) {
+          let options: GyroscopeOptions = {
+            frequency: 30
+          };
+          this.gyroscope.getCurrent(options).then((orientation: GyroscopeOrientation) => {
+            console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp)
+            if (Math.hypot(orientation.x, orientation.y, orientation.z) <= 1) {
+              this.handleSuccessfullShot()
+            } else {
+              this.handleMissedShot()
+            }
+          })
+          .catch()
+        } else {
+          this.handleMissedShot()
+        }
+      },
+      (error: any) => console.log(error)
+    );
   }
 
   endMatch(): void { }
