@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"github.com/paulmach/go.geo"
+	"time"
 )
 
 // Ensure LocationService implements ILocationService.
@@ -49,6 +50,19 @@ func (service *LocationService) Get(userID uint) (*models.Location, error) {
 	result.Location = location.Location
 
 	return &result, nil
+}
+
+// GetActiveUsers returns the list of active users
+func (service *LocationService) GetActiveUsers() ([]uint, error) {
+	var result []uint
+	db := service.Database.Model(&models.Location{}).
+		Where("updated_at >= ?", time.Now().Add(-1*time.Second*15)).Pluck("user_id", &result)
+
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return result, nil
 }
 
 // Create saves a new match in the database
