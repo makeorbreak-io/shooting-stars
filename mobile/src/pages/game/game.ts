@@ -35,11 +35,8 @@ export class GamePage {
   private mobileDevice: boolean
   private backgroundGeolocationConfig: BackgroundGeolocationConfig;
   private socket: WebSocket;
-<<<<<<< HEAD
   private state: State;
-=======
   private searching: boolean = false;
->>>>>>> 2a3505f95df3bee8809b17b4b6dce0588181a0b4
   constructor(
     public api: ApiProvider,
     public authProvider: AuthProvider,
@@ -99,11 +96,8 @@ export class GamePage {
   }
 
   startPlaying(): void {
-<<<<<<< HEAD
     this.state = State.WAITING
-=======
     this.searching = true;
->>>>>>> 2a3505f95df3bee8809b17b4b6dce0588181a0b4
     this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
