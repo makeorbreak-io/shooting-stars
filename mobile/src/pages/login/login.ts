@@ -30,13 +30,12 @@ export class LoginPage {
     }
     this.api.post('/auth/login', json).then(data => {
       this.auth.setData(data);
-      this.nativeAudio.play('westernWhistle');
       this.navCtrl.setRoot(TabsPage, { animate: true, direction: 'forward' });
     })
       .catch(err => {
         console.log(err)
       });
-  }
+  }t
 
   createAccount() {
     this.navCtrl.setRoot(RegisterPage);

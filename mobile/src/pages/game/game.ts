@@ -1,5 +1,6 @@
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
@@ -7,6 +8,7 @@ import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Vibration } from '@ionic-native/vibration';
 import { GlobalsProvider } from '../../providers/globals/globals';
 
 /**
@@ -20,6 +22,7 @@ import { GlobalsProvider } from '../../providers/globals/globals';
 @Component({
   selector: 'page-game',
   templateUrl: 'game.html',
+  providers: [ Vibration ]
 })
 export class GamePage {
   private mobileDevice: boolean
@@ -31,11 +34,13 @@ export class GamePage {
     public authProvider: AuthProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
+    private backgroundMode: BackgroundMode,
     private backgroundGeolocation: BackgroundGeolocation,
     public platform: Platform,
     private gyroscope: Gyroscope,
     private deviceMotion: DeviceMotion,
-    private globals: GlobalsProvider) {
+    private globals: GlobalsProvider,
+    private vibration: Vibration) {
     if (this.platform.is('cordova')) {
       this.mobileDevice = true
     } else {
@@ -56,16 +61,16 @@ export class GamePage {
 
     let game = this;
 
-    this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
+    //this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
+    this.socket = new WebSocket("ws://echo.websocket.org");
     this.socket.onopen = function () {
-      this.send(JSON.stringify({ message: 'hello server' }));
-      console.log('sent');
+      setTimeout(() => this.send(JSON.stringify({ message: 'hello server' })), 3000);
     }
 
     this.socket.onmessage = function (event) {
       let m = JSON.parse(event.data);
       console.log("Received message", m.message);
-      game.startPlaying();
+      game.startMatch();
     }
 
     this.socket.onerror = function (err) {
@@ -75,20 +80,17 @@ export class GamePage {
 
   ionViewDidLoad() {
     if (this.mobileDevice) {
-      this.platform.ready().then(() => this.onCordovaReady())
+      this.platform.ready().then(() => this.startPlaying())
     }
   }
 
-  onCordovaReady() {
-    this.startPlaying()
-  }
-
   startPlaying(): void {
+    this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
     }
-    console.log('Match starting.')
+    console.log('Waiting for a match.')
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
       console.log(location.latitude, location.longitude, location.speed)
@@ -101,7 +103,6 @@ export class GamePage {
       console.error(error)
     })
     this.backgroundGeolocation.start();
-    this.startMatch()
   }
 
   stopPlaying(): void {
@@ -110,35 +111,50 @@ export class GamePage {
     }
   }
 
-  startMatch(): void {
-    let options: GyroscopeOptions = {
-      frequency: 1000
-    };
+  startMatch() : void {
+    this.backgroundMode.unlock()
+    this.backgroundMode.wakeUp()
+    this.backgroundMode.moveToForeground()
+    this.platform.resume.asObservable().subscribe(() => {
+      //this.nativeAudio.play('westernWhistle', () => {});
+      this.vibration.vibrate(3000);
+      
+      // Get the device current acceleration
+      this.deviceMotion.getCurrentAcceleration().then(
+        (a) => this.handleAccelerometer(a),
+        (error: any) => console.log(error)
+      );
+    });
+  }
 
-    this.gyroscope.getCurrent(options)
+  handleAccelerometer(acceleration: DeviceMotionAccelerationData) {
+    console.log('acceleration', acceleration);
+    if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 2 && Math.abs(acceleration.z) <= 2) {
+      let options: GyroscopeOptions = {
+        frequency: 30
+      };
+      this.gyroscope.getCurrent(options)
       .then((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
+        if (Math.hypot(orientation.x, orientation.y, orientation.z) <= 1) {
+          this.shoot()
+        } else {
+          this.deviceMotion.getCurrentAcceleration().then(
+            (a) => this.handleAccelerometer(a),
+            (error: any) => console.log(error)
+          );
+        }
       })
       .catch()
+    } else {
+      this.deviceMotion.getCurrentAcceleration().then(
+        (a) => this.handleAccelerometer(a),
+        (error: any) => console.log(error)
+      );
+    }
+  }
 
-    let gyroscopeSubscription = this.gyroscope.watch(options)
-      .subscribe((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-      });
-
-    // Get the device current acceleration
-    this.deviceMotion.getCurrentAcceleration().then(
-      (acceleration: DeviceMotionAccelerationData) => console.log(acceleration),
-      (error: any) => console.log(error)
-    );
-
-    // Watch device acceleration
-    var accelerometerSubscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-      console.log('acceleration', acceleration);
-    });
-
-    gyroscopeSubscription.unsubscribe();
-    accelerometerSubscription.unsubscribe();
+  shoot() {
+    console.log('SHOT A SHERIFF!!!')
   }
 
   endMatch(): void { }

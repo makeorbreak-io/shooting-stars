@@ -90,6 +90,9 @@
     <plugin name="cordova-plugin-device-motion" spec="^1.2.5" />
     <plugin name="cordova-plugin-advanced-http" spec="^1.11.1" />
     <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
-    <engine name="android" spec="7.0.0" />
+    <plugin name="cordova-plugin-vibration" spec="^3.0.1" />
+    <plugin name="cordova-plugin-background-mode" spec="https://github.com/katzer/cordova-plugin-background-mode" />
     <engine name="browser" spec="5.0.3" />
+    <engine name="android" spec="~7.0.0" />
+    <allow-navigation href="http://193.137.145.59:8100" />
 </widget>

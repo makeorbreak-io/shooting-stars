@@ -11,6 +11,7 @@ import { ProfilePage } from '../pages/profile/profile';
 import { LeaderboardPage } from '../pages/leaderboard/leaderboard';
 
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope } from '@ionic-native/gyroscope';
@@ -50,6 +51,7 @@ import { AuthProvider } from '../providers/auth/auth';
   ],
   providers: [
     BackgroundGeolocation,
+    BackgroundMode,
     DeviceMotion,
     Geolocation,
     Gyroscope,
