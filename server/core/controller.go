@@ -98,6 +98,10 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 		c.AbortWithError(http.StatusBadRequest, ErrorEmailAlreadyExists).
 			SetType(gin.ErrorTypePublic)
 		return
+	case ErrorNotInMatch:
+		c.AbortWithError(http.StatusNotFound, ErrorNotInMatch).
+			SetType(gin.ErrorTypePublic)
+		return
 	default:
 		c.Error(object).SetType(gin.ErrorTypePrivate)
 		c.AbortWithError(http.StatusInternalServerError, ErrorInternalServerError).
@@ -107,8 +111,8 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 }
 
 // GetRequestID returns the ID value of a request
-func (controller *Controller) GetRequestID(c *gin.Context) (uint, error) {
-	value, err := controller.GetRequestParam(c, "id")
+func (controller *Controller) GetRequestID(c *gin.Context, param string) (uint, error) {
+	value, err := controller.GetRequestParam(c, param)
 	if err != nil {
 		return 0, ErrorBadRequest
 	}

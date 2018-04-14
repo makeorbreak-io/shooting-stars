@@ -33,7 +33,7 @@ func (controller *LocationController) Update(c *gin.Context) {
 	}
 
 	// Check if editing own user
-	id, err := controller.GetRequestID(c)
+	id, err := controller.GetRequestID(c, "id")
 	if err != nil {
 		controller.HandleError(c, err)
 		return
@@ -49,10 +49,20 @@ func (controller *LocationController) Update(c *gin.Context) {
 	}
 
 	// Update the location of the user
-	err = controller.LocationService.Update(id, location.Longitude, location.Longitude)
-	if err != nil {
-		controller.HandleError(c, err)
-		return
+	previousLocation, err := controller.LocationService.Get(id)
+	if previousLocation == nil ||
+		err != nil {
+		_, err = controller.LocationService.Create(id, location.Latitude, location.Longitude)
+		if err != nil {
+			controller.HandleError(c, err)
+			return
+		}
+	} else {
+		err = controller.LocationService.Update(id, location.Latitude, location.Longitude)
+		if err != nil {
+			controller.HandleError(c, err)
+			return
+		}
 	}
 
 	c.Status(http.StatusNoContent)

@@ -26,4 +26,6 @@ var (
 	ErrorInvalidGender = errors.New("INVALID_GENDER")
 	// ErrorEmailAlreadyExists is thrown when the register email is already registered
 	ErrorEmailAlreadyExists = errors.New("EMAIL_ALREADY_EXISTS")
+	// ErrorNotInMatch is thrown when the user is not in a match
+	ErrorNotInMatch = errors.New("NOT_IN_MATCH")
 )
