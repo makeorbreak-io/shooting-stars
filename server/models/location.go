@@ -25,7 +25,8 @@ type Location struct {
 type ILocationService interface {
 	CreateTable() error
 	Get(userID uint) (*Location, error)
-	GetActiveUsers() ([]uint, error)
+	GetActiveUsers(maxLastUpdate uint) ([]uint, error)
+	GetNearestActiveUserLocation(userID, maxLastUpdate uint) ([]*Location, error)
 	Create(userID uint, latitude, longitude float64) (uint, error)
 	Update(userID uint, latitude, longitude float64) error
 }

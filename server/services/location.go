@@ -53,10 +53,10 @@ func (service *LocationService) Get(userID uint) (*models.Location, error) {
 }
 
 // GetActiveUsers returns the list of active users
-func (service *LocationService) GetActiveUsers() ([]uint, error) {
+func (service *LocationService) GetActiveUsers(maxLastUpdate uint) ([]uint, error) {
 	var result []uint
 	db := service.Database.Model(&models.Location{}).
-		Where("updated_at >= ?", time.Now().Add(-1*time.Second*15)).Pluck("user_id", &result)
+		Where("updated_at >= ?", time.Now().Add(-1*time.Second*time.Duration(maxLastUpdate))).Pluck("user_id", &result)
 
 	if db.Error != nil {
 		return nil, db.Error
@@ -65,7 +65,35 @@ func (service *LocationService) GetActiveUsers() ([]uint, error) {
 	return result, nil
 }
 
-// Create saves a new match in the database
+// GetNearestActiveUserLocation returns the nearest active users locations to a given user
+func (service *LocationService) GetNearestActiveUserLocation(userID, maxLastUpdate uint) ([]*models.Location, error) {
+	// Active users
+	activeUsers, err := service.GetActiveUsers(maxLastUpdate)
+	if err != nil {
+		return nil, err
+	}
+
+	// Current user location
+	userLocation, err := service.Get(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*models.Location
+	db := service.Database.
+		Order("ST_Distance(location, '" + userLocation.Location.ToWKT() + "')").
+		Where("user_id != ? AND user_id IN (?)", userID, activeUsers).
+		Limit(10).
+		Find(&result)
+
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	return result, nil
+}
+
+// Create saves a new location in the database
 func (service *LocationService) Create(userID uint, latitude, longitude float64) (uint, error) {
 	location := models.Location{
 		UserID:     userID,
@@ -80,7 +108,7 @@ func (service *LocationService) Create(userID uint, latitude, longitude float64)
 	return location.ID, nil
 }
 
-// Update updates the information about a match in the database
+// Update updates the information about a location in the database
 func (service *LocationService) Update(userID uint, latitude, longitude float64) error {
 	return service.Database.Model(&models.Location{}).
 		Where("user_id = ?", userID).
