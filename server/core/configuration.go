@@ -11,12 +11,14 @@ var config *Configuration
 
 // Configuration is the struct that holds the application configuration
 type Configuration struct {
-	AppName            string `json:"app_name"`
-	BaseURL            string `json:"base_url"`
-	Port               int    `json:"port"`
-	Verbose            bool   `json:"verbose"`
-	DatabaseType       string `json:"database_type"`
-	DatabaseConnection string `json:"database_connection"`
+	AppName               string `json:"app_name"`
+	BaseURL               string `json:"base_url"`
+	Port                  int    `json:"port"`
+	Verbose               bool   `json:"verbose"`
+	DatabaseType          string `json:"database_type"`
+	DatabaseConnection    string `json:"database_connection"`
+	MaxLocationLastUpdate uint    `json:"maxLocationLastUpdate"`
+	MatchMakingInterval   uint    `json:"matchMakingInterval"`
 }
 
 // GetConfiguration returns the configuration
