@@ -70,7 +70,6 @@ func (service *LocationService) Create(userID uint, latitude, longitude float64)
 
 // Update updates the information about a match in the database
 func (service *LocationService) Update(userID uint, latitude, longitude float64) error {
-	log.Printf("Location %s", geo.NewPointFromLatLng(latitude, longitude).ToWKT())
 	return service.Database.Model(&models.Location{}).
 		Where("user_id = ?", userID).
 		Updates(map[string]interface{}{"location": geo.NewPointFromLatLng(latitude, longitude).ToWKT()}).Error
