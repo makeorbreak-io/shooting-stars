@@ -5,6 +5,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"net/http"
+	"time"
 )
 
 // Ensure MatchController implements IController.
@@ -13,8 +14,7 @@ var _ core.IController = &MatchController{}
 // MatchController is the structure for the controller of matches
 type MatchController struct {
 	core.Controller
-	AuthService models.IAuthService
-	UserService models.IUserService
+	MatchService models.IMatchService
 }
 
 // LoadRoutes loads all the routes of matches
@@ -42,5 +42,30 @@ func (controller *MatchController) Shoot(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	// Get user match
+	match, err := controller.MatchService.GetActiveMatchByUserID(userID)
+	if match == nil {
+		controller.HandleError(c, core.ErrorNotInMatch)
+		return
+	}
+
+	// Set shoot time
+	if match.UserOneID == userID {
+		match.UserOneShootTime = time.Now()
+	} else if match.UserTwoID == userID {
+		match.UserTwoShootTime = time.Now()
+	} else {
+		// How are we here?
+		controller.HandleError(c, core.ErrorInternalServerError)
+		return
+	}
+
+	// Save the match
+	err = controller.MatchService.Update(match)
+	if err != nil {
+		controller.HandleError(c, err)
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }

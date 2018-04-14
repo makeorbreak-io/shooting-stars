@@ -98,6 +98,10 @@ func (controller *Controller) HandleError(c *gin.Context, object error) {
 		c.AbortWithError(http.StatusBadRequest, ErrorEmailAlreadyExists).
 			SetType(gin.ErrorTypePublic)
 		return
+	case ErrorNotInMatch:
+		c.AbortWithError(http.StatusNotFound, ErrorNotInMatch).
+			SetType(gin.ErrorTypePublic)
+		return
 	default:
 		c.Error(object).SetType(gin.ErrorTypePrivate)
 		c.AbortWithError(http.StatusInternalServerError, ErrorInternalServerError).
