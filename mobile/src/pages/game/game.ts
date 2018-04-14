@@ -61,16 +61,16 @@ export class GamePage {
 
     let game = this;
 
-    this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
+    //this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
+    this.socket = new WebSocket("ws://echo.websocket.org");
     this.socket.onopen = function () {
-      this.send(JSON.stringify({ message: 'hello server' }));
-      console.log('sent');
+      setTimeout(() => this.send(JSON.stringify({ message: 'hello server' })), 3000);
     }
 
     this.socket.onmessage = function (event) {
       let m = JSON.parse(event.data);
       console.log("Received message", m.message);
-      game.startPlaying();
+      game.startMatch();
     }
 
     this.socket.onerror = function (err) {
@@ -80,20 +80,17 @@ export class GamePage {
 
   ionViewDidLoad() {
     if (this.mobileDevice) {
-      this.platform.ready().then(() => this.onCordovaReady())
+      this.platform.ready().then(() => this.startPlaying())
     }
   }
 
-  onCordovaReady() {
-    this.startPlaying()
-  }
-
   startPlaying(): void {
+    this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
       return
     }
-    console.log('Match starting.')
+    console.log('Waiting for a match.')
     this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
       console.log('received location')
       console.log(location.latitude, location.longitude, location.speed)
@@ -106,7 +103,6 @@ export class GamePage {
       console.error(error)
     })
     this.backgroundGeolocation.start();
-    this.startMatch()
   }
 
   stopPlaying(): void {
@@ -115,32 +111,13 @@ export class GamePage {
     }
   }
 
-<<<<<<< HEAD
   startMatch() : void {
-    this.backgroundMode.enable();
+    this.backgroundMode.unlock()
     this.vibration.vibrate(3000);
     
-=======
-  startMatch(): void {
-    let options: GyroscopeOptions = {
-      frequency: 1000
-    };
-
-    this.gyroscope.getCurrent(options)
-      .then((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-      })
-      .catch()
-
-    let gyroscopeSubscription = this.gyroscope.watch(options)
-      .subscribe((orientation: GyroscopeOrientation) => {
-        console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp);
-      });
-
->>>>>>> e1f1918d3461bdb4757589446ec6ec9e74ef2faf
     // Get the device current acceleration
     this.deviceMotion.getCurrentAcceleration().then(
-      this.handleAccelerometer,
+      (a) => this.handleAccelerometer(a),
       (error: any) => console.log(error)
     );
   }
@@ -157,7 +134,7 @@ export class GamePage {
           this.shoot()
         } else {
           this.deviceMotion.getCurrentAcceleration().then(
-            this.handleAccelerometer,
+            (a) => this.handleAccelerometer(a),
             (error: any) => console.log(error)
           );
         }
@@ -165,14 +142,13 @@ export class GamePage {
       .catch()
     } else {
       this.deviceMotion.getCurrentAcceleration().then(
-        this.handleAccelerometer,
+        (a) => this.handleAccelerometer(a),
         (error: any) => console.log(error)
       );
     }
   }
 
   shoot() {
-    this.state = State.WAITING
     console.log('SHOT A SHERIFF!!!')
   }
 
