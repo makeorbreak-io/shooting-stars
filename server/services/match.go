@@ -14,7 +14,7 @@ type MatchService struct {
 	Database *gorm.DB
 }
 
-// CreateTable creates the users table
+// CreateTable creates the matches table
 func (service *MatchService) CreateTable() error {
 	err := service.Database.DropTableIfExists(&models.Match{}).Error
 	if err != nil {

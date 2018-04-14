@@ -42,7 +42,7 @@ func main() {
 		log.Fatal("Could not connect to the database: " + err.Error())
 		os.Exit(1)
 	}
-	gorm.DefaultTableNameHandler = func (db *gorm.DB, defaultTableName string) string  {
+	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "mob_" + defaultTableName
 	}
 
@@ -59,6 +59,12 @@ func main() {
 	authService := &services.AuthService{
 		Database: database,
 	}
+	locationService := &services.LocationService{
+		Database: database,
+	}
+	matchService := &services.MatchService{
+		Database: database,
+	}
 	userService := &services.UserService{
 		Database: database,
 	}
@@ -66,6 +72,8 @@ func main() {
 	// Initialize database
 	if *initDatabase {
 		authService.CreateTable()
+		locationService.CreateTable()
+		matchService.CreateTable()
 		userService.CreateTable()
 	}
 

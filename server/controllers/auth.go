@@ -93,7 +93,7 @@ func (controller *AuthController) Register(c *gin.Context) {
 		controller.HandleError(c, core.ErrorInvalidGender)
 		return
 	}
-	if user, err := controller.UserService.GetByEmail(request.Email); user != nil || err != nil {
+	if user, _ := controller.UserService.GetByEmail(request.Email); user != nil {
 		controller.HandleError(c, core.ErrorEmailAlreadyExists)
 		return
 	}
