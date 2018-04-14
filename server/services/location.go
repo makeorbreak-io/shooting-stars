@@ -34,7 +34,21 @@ func (service *LocationService) Get(userID uint) (*models.Location, error) {
 		return nil, db.Error
 	}
 
-	log.Printf("Location: %v", result)
+	// Get location as a geo.Point
+	type Location struct {
+		Location geo.Point `gorm:"location"`
+	}
+	location := Location{}
+	db = service.Database.Table("mob_locations").
+		Select("ST_AsBinary(location) as location").
+		Where("user_id = ?", userID).
+		Scan(&location)
+	if db.Error != nil {
+		return nil, db.Error
+	}
+
+	result.Location = location.Location
+	log.Printf("Location: %v", result.Location)
 
 	return &result, nil
 }
