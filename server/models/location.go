@@ -9,6 +9,7 @@ import (
 type UpdateLocationRequest struct {
 	Latitude  float64 `json:"latitude"`
 	Longitude float64 `json:"longitude"`
+	Speed     float64 `json:"speed"`
 }
 
 // Location is the model for locations
@@ -24,6 +25,8 @@ type Location struct {
 type ILocationService interface {
 	CreateTable() error
 	Get(userID uint) (*Location, error)
+	GetActiveUsers(maxLastUpdate uint) ([]uint, error)
+	GetNearestUserLocation(userID uint) (*Location, error)
 	Create(userID uint, latitude, longitude float64) (uint, error)
 	Update(userID uint, latitude, longitude float64) error
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/middlewares"
 	"github.com/makeorbreak-io/shooting-stars/server/services"
+	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"log"
 	"os"
 	"strconv"
@@ -99,6 +100,9 @@ func main() {
 		&controllers.LocationController{
 			LocationService: locationService,
 		},
+		&controllers.MatchController{
+			MatchService: matchService,
+		},
 		&controllers.UserController{
 			UserService: userService,
 		},
@@ -106,6 +110,13 @@ func main() {
 	for _, controller := range ctrls {
 		controller.LoadRoutes(routerAuthenticatedGroup)
 	}
+
+	// Start tasks
+	matchMakingTask := tasks.MatchMakingTask{
+		LocationService: locationService,
+		MatchService:    matchService,
+	}
+	matchMakingTask.Run()
 
 	// Start the server
 	router.Run(":" + strconv.Itoa(config.Port))
