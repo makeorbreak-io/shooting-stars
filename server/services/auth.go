@@ -58,6 +58,16 @@ func (service *AuthService) GenerateAuthToken(userID uint) (*models.AuthToken, e
 	return &authToken, nil
 }
 
+// DeleteAuthToken deletes an authentication token
+func (service *AuthService) DeleteAuthToken(authToken string) error {
+	_, err := service.GetUserIDByToken(authToken)
+	if err != nil {
+		return err
+	}
+
+	return service.Database.Delete(&models.AuthToken{}, "token = ?", authToken).Error
+}
+
 // ValidateLogin checks if the password matches the user hashed password
 func (service *AuthService) ValidateLogin(password string, user *models.User) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))

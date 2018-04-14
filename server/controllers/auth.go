@@ -24,6 +24,7 @@ func (controller *AuthController) LoadRoutes(r *gin.RouterGroup) {
 
 	router.POST("/login", controller.Login)
 	router.POST("/register", controller.Register)
+	router.GET("/logout", controller.Logout)
 }
 
 // Login is a function that validates a login and returns an authentication token
@@ -126,4 +127,22 @@ func (controller *AuthController) Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, authToken)
+}
+
+// Logout is a function that unlogs out a user
+func (controller *AuthController) Logout(c *gin.Context) {
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		controller.HandleError(c, core.ErrorNotLogged)
+		return
+	}
+
+	// Generate authentication token
+	err := controller.AuthService.DeleteAuthToken(token)
+	if err != nil {
+		controller.HandleError(c, err)
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }

@@ -34,5 +34,6 @@ type IAuthService interface {
 	CreateTable() error
 	GetUserIDByToken(token string) (uint, error)
 	GenerateAuthToken(userID uint) (*AuthToken, error)
+	DeleteAuthToken(authToken string) error
 	ValidateLogin(password string, user *User) error
 }
