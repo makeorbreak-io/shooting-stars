@@ -25,7 +25,6 @@ var connections = make(map[uint]*websocket.Conn, 0)
 // AddConnection adds a web socket connection associated to a given user
 func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
 	connections[userID] = ws
-	log.Printf("User after adding connection %d", userID)
 }
 
 // Start is a function to start the task with a given interval between runs
@@ -73,7 +72,10 @@ func (task *MatchMakingTask) Run() {
 		// TODO: Remove me
 		if ws, exists := connections[userID]; exists {
 			log.Printf("Sending duel message")
-			websocket.Message.Send(ws, core.MessageDuel)
+			err = websocket.Message.Send(ws, core.MessageDuel)
+			if err != nil {
+				log.Printf("Could not send the message: %v", err)
+			}
 		}
 
 		if len(nearestUsersLocations) == 0 {

@@ -6,7 +6,6 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"golang.org/x/net/websocket"
-	"log"
 	"time"
 )
 
@@ -62,6 +61,5 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 
 	websocket.Message.Send(ws, core.MessageOK)
 
-	log.Printf("User before adding connection %d", userID)
 	controller.MatchMakingTask.AddConnection(userID, ws)
 }
