@@ -4,7 +4,7 @@ import { LeaderboardPage } from './leaderboard';
 
 @NgModule({
   declarations: [
-    LeaderboardPage,
+
   ],
   imports: [
     IonicPageModule.forChild(LeaderboardPage),
