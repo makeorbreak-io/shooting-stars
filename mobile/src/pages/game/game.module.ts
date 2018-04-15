@@ -4,7 +4,6 @@ import { GamePage } from './game';
 
 @NgModule({
   declarations: [
-    GamePage,
   ],
   imports: [
     IonicPageModule.forChild(GamePage),

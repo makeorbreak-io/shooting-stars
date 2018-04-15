@@ -1,5 +1,4 @@
 <ion-content>
-
   <button *ngIf="state == State.RESTING" ion-button class="start" (click)="startPlaying()">Search For Duels</button>
   <button *ngIf="state == State.WAITING" ion-button class="stop" (click)="stopPlaying()">Leave Quest</button>
   <button *ngIf="state == State.IN_MATCH" ion-button class="shoot" (click)="shoot()">Click the screen to shoot!</button>

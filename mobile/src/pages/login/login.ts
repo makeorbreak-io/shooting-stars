@@ -15,8 +15,7 @@ import { TabsPage } from '../tabs/tabs';
 export class LoginPage {
   mobileDevice: boolean;
   userCredentials = { email: 'g@g.com', password: 'g' };
-  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider, private nativeAudio: NativeAudio) {
-    console.log(this.auth.getData());
+  constructor(public navCtrl: NavController, public navParams: NavParams, public auth: AuthProvider, public api: ApiProvider/* , private nativeAudio: NativeAudio */) {
   }
 
   ionViewDidLoad() {
