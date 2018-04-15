@@ -5,6 +5,7 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
 import { Component } from '@angular/core';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { DeviceOrientation } from '@ionic-native/device-orientation';
+import { Geolocation } from '@ionic-native/geolocation';
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -38,9 +39,9 @@ interface Rotation {
 })
 export class GamePage {
   private mobileDevice: boolean
-  private backgroundGeolocationConfig: BackgroundGeolocationConfig;
   private socket: WebSocket;
-  private State = State;
+  private State = State; // this is required for the angular template to have access to the State enum
+  uselessVarToShutUpTSLint = this.State.IN_MATCH;
   private state: State = State.RESTING;
   private totalRotation: Rotation = {
     x: 0,
@@ -60,6 +61,7 @@ export class GamePage {
     private backgroundMode: BackgroundMode,
     private backgroundGeolocation: BackgroundGeolocation,
     public platform: Platform,
+    private geolocation: Geolocation,
     private gyroscope: Gyroscope,
     private deviceMotion: DeviceMotion,
     private nativeAudio: NativeAudio,
@@ -73,19 +75,6 @@ export class GamePage {
     } else {
       this.mobileDevice = false
     }
-    if (this.mobileDevice) {
-      this.backgroundGeolocationConfig = {
-        desiredAccuracy: 0,
-        stationaryRadius: 0,
-        distanceFilter: 0,
-        debug: true,
-        notificationTitle: 'Shooting Stars',
-        notificationText: 'Game is running, be prepared for combat!',
-        startOnBoot: true,
-        stopOnTerminate: false,
-      };
-    }
-
   }
 
   ionViewDidLoad() {
@@ -97,7 +86,7 @@ export class GamePage {
 
   startPlaying(): void {
     this.socket = new WebSocket(this.globals.SOCKET_URL + "/websocket/" + this.auth.token);
-    // this.socket = new WebSocket("ws://echo.websocket.org");
+    //this.socket = new WebSocket("ws://echo.websocket.org");
 
     this.socket.onopen = () => {
       this.socket.send(this.auth.token);
@@ -164,7 +153,6 @@ export class GamePage {
   spamWakeUp() {
     if (this.state != State.IN_MATCH) return;
     this.vibration.vibrate(5000);
-    let vibrating: boolean = false;
     let interval = setInterval(() => {
       this.backgroundMode.unlock();
       this.vibration.vibrate(200);
@@ -210,10 +198,9 @@ export class GamePage {
     this.api.post('/matches/' + this.auth.userID + '/shoot', {
     })
       .then(data => {
-        console.log(data);
+        console.log(JSON.stringify(data));
         this.state = State.VIEWING_MATCH_RESULT
       }).catch((error: HttpErrorResponse) => {
-        console.error(error);
         this.state = State.VIEWING_MATCH_RESULT
       });
   }
@@ -234,14 +221,7 @@ export class GamePage {
     this.deviceMotion.getCurrentAcceleration().then(
       (acceleration) => {
         if (Math.abs(acceleration.x) >= 8 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 5) {
-          this.gyroscope.getCurrent(this.gyroscopeOptions).then((orientation: GyroscopeOrientation) => {
-            if (Math.abs(this.totalRotation.x) > 30) {
-              this.handleSuccessfullShot()
-            } else {
-              this.handleMissedShot()
-            }
-          })
-            .catch()
+          this.handleSuccessfullShot()
         } else {
           this.handleMissedShot()
         }
@@ -255,14 +235,13 @@ export class GamePage {
   fetchLocation() {
     setTimeout(() => {
       if (this.state === State.WAITING) {
-        this.backgroundGeolocation.configure(this.backgroundGeolocationConfig).subscribe((location: BackgroundGeolocationResponse) => {
+        this.geolocation.getCurrentPosition().then((location: BackgroundGeolocationResponse) => {
           console.log('received location')
           console.log(location.latitude, location.longitude, location.speed)
           if (!location.speed) {
             location.speed = 0
           }
           this.updateLocation(location.latitude, location.longitude, location.speed)
-          this.backgroundGeolocation.finish();
         }, (error: any) => {
           console.error(error)
         })
@@ -281,6 +260,7 @@ export class GamePage {
     })
       .then(data => {
         console.log(data);
+        console.log('sent location')
       }).catch((error: HttpErrorResponse) => {
         console.error(error);
       });
