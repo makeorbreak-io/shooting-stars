@@ -44,6 +44,7 @@ export class GamePage {
   private State = State; // this is required for the angular template to have access to the State enum
   uselessVarToShutUpTSLint = this.State.IN_MATCH;
   private state: State = State.RESTING;
+  private genderPreference: string = "ANY";
   private totalRotation: Rotation = {
     x: 0,
     y: 0,
@@ -278,7 +279,8 @@ export class GamePage {
     this.api.post('/locations/' + this.auth.userID, {
       "latitude": latitude,
       "longitude": longitude,
-      "speed": speed
+      "speed": speed,
+      "genderPreference": this.genderPreference
     })
       .then(data => {
         console.log(data);

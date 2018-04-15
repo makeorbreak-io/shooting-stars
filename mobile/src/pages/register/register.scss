@@ -1,7 +1,8 @@
 page-register {
     .scroll-content {
-        justify-content: center;
+        padding: 0px !important;
         display: flex !important;
+        flex-direction: column;
         align-items: center !important;
     }
     .register-content {
