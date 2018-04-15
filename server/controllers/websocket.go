@@ -67,13 +67,17 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 	for {
 		err := websocket.Message.Receive(ws, &message)
 		if err != nil {
-			continue
+			controller.MatchMakingTask.RemoveConnection(userID)
+			ws.Close()
+			break
 		}
 
 		if message == core.MessageClose {
 			controller.MatchMakingTask.RemoveConnection(userID)
 			ws.Close()
 			break
+		} else if message == core.MessagePing {
+			websocket.Message.Send(ws, core.MessagePong)
 		}
 	}
 }

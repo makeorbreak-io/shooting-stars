@@ -7,5 +7,9 @@ var (
 	// MessageDuel is sent when a duel started
 	MessageDuel = "DUEL"
 	// MessageClose is received when the client closes
-	MessageClose = "CLOUSE"
+	MessageClose = "CLOSE"
+	// MessageClose is received when the client sends a ping
+	MessagePing = "PING"
+	// MessagePong is sent when the client sends a ping
+	MessagePong = "PONG"
 )
