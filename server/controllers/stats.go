@@ -5,6 +5,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"net/http"
+	"strings"
 )
 
 // Ensure StatsController implements IController.
@@ -40,8 +41,9 @@ func (controller *StatsController) GetUsersMostWins(c *gin.Context) {
 
 	var users []*models.UserRank
 	for idx, user := range topUsers {
+		nameArray := strings.Split(user.Name, " ")
 		users = append(users, &models.UserRank{
-			Name:   user.Name,
+			Name:   nameArray[0] + " " + string(nameArray[len(nameArray) - 1][0]) + ".",
 			Wins:   user.Wins,
 			UserID: user.ID,
 			Rank:   uint(idx + 1),
