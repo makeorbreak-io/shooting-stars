@@ -99,7 +99,7 @@ func main() {
 		},
 		&controllers.WebSocketController{
 			AuthService:     authService,
-			MatchMakingTask: matchMakingTask,
+			MatchMakingTask: &matchMakingTask,
 		},
 	}
 	for _, controller := range ctrls {

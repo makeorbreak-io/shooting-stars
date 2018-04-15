@@ -19,17 +19,13 @@ type MatchMakingTask struct {
 	quit            chan struct{}
 }
 
-// Websocket connections mapped from user to webs ocket
+// Web socket connections mapped from user to web socket
 var connections map[uint]*websocket.Conn
 
 // AddConnection adds a web socket connection associated to a given user
 func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
 	connections[userID] = ws
 	log.Printf("User %d", userID)
-	if ws, exists := connections[userID]; exists {
-		log.Printf("Sending duel message")
-		websocket.Message.Send(ws, core.MessageDuel)
-	}
 }
 
 // Start is a function to start the task with a given interval between runs

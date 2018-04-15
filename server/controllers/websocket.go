@@ -16,7 +16,7 @@ var _ core.IController = &WebSocketController{}
 type WebSocketController struct {
 	core.Controller
 	AuthService     models.IAuthService
-	MatchMakingTask tasks.MatchMakingTask
+	MatchMakingTask *tasks.MatchMakingTask
 }
 
 // LoadRoutes loads all the routes of matches
