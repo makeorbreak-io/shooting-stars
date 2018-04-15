@@ -97,6 +97,7 @@ export class GamePage {
   }
 
   startPlaying(): void {
+    this.hasWon = null
     if (this.socket != null)
       this.socket.close(1000);
 
