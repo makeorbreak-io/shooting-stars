@@ -90,6 +90,9 @@ func main() {
 			AuthService: authService,
 			UserService: userService,
 		},
+		&controllers.WebSocketController{
+			AuthService: authService,
+		},
 	}
 	for _, controller := range ctrls {
 		controller.LoadRoutes(routerPublicGroup)
