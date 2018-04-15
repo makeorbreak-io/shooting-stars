@@ -3,8 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { GamePage } from './game';
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     IonicPageModule.forChild(GamePage),
   ],

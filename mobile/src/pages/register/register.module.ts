@@ -3,8 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { RegisterPage } from './register';
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     IonicPageModule.forChild(RegisterPage),
   ],

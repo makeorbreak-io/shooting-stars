@@ -3,8 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { LoginPage } from './login';
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     IonicPageModule.forChild(LoginPage),
   ],

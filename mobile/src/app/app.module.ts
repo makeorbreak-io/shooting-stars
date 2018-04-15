@@ -25,6 +25,7 @@ import { GlobalsProvider } from '../providers/globals/globals';
 import { AuthProvider } from '../providers/auth/auth';
 import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 import { Flashlight } from '@ionic-native/flashlight';
+import { Toast } from '@ionic-native/toast';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { Flashlight } from '@ionic-native/flashlight';
     ApiProvider,
     HttpClientModule,
     GlobalsProvider,
-    AuthProvider
+    AuthProvider,
+    Toast
   ]
 })
 export class AppModule {}

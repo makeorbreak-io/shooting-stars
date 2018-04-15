@@ -1,11 +1,11 @@
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
-import { BackgroundMode } from '@ionic-native/background-mode';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { Component } from '@angular/core';
 import { DeviceMotion } from '@ionic-native/device-motion';
 import { DeviceOrientation } from '@ionic-native/device-orientation';
-import { Geolocation } from '@ionic-native/geolocation';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -15,6 +15,7 @@ import { NativeAudio } from '@ionic-native/native-audio';
 import { Flashlight } from '@ionic-native/flashlight';
 import { GlobalsProvider } from '../../providers/globals/globals';
 import { AlertController } from 'ionic-angular';
+import { Toast } from '@ionic-native/toast';
 
 enum State {
   WAITING,
@@ -55,13 +56,21 @@ export class GamePage {
   private gyroscopeOptions: GyroscopeOptions = {
     frequency: 30
   };
+  private backgroundGeolocationConfig: BackgroundGeolocationConfig = {
+      desiredAccuracy: 0,
+      stationaryRadius: 0,
+      distanceFilter: 0,
+      interval: 30,
+      debug: false, //  enable this hear sounds for background-geolocation life-cycle.
+      stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+  };
   constructor(
     public api: ApiProvider,
     public auth: AuthProvider,
     public navCtrl: NavController,
     public navParams: NavParams,
-    private backgroundMode: BackgroundMode,
     private backgroundGeolocation: BackgroundGeolocation,
+    private backgroundMode: BackgroundMode,
     public platform: Platform,
     private geolocation: Geolocation,
     private gyroscope: Gyroscope,
@@ -71,7 +80,8 @@ export class GamePage {
     private globals: GlobalsProvider,
     private deviceOrientation: DeviceOrientation,
     private flashlight: Flashlight,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private toast: Toast) {
     if (this.platform.is('cordova')) {
       this.mobileDevice = true
     } else {
@@ -139,7 +149,13 @@ export class GamePage {
     }
     console.log('Waiting for a match.')
     this.fetchLocation();
-    this.backgroundGeolocation.start();
+    this.backgroundGeolocation.configure(this.backgroundGeolocationConfig)
+      .subscribe((location: BackgroundGeolocationResponse) => {
+        this.updateLocation(location.latitude, location.longitude, location.speed);
+        this.backgroundGeolocation.finish();
+
+      });
+    this.backgroundGeolocation.start()
     this.backgroundMode.disableWebViewOptimizations()
     this.backgroundMode.moveToBackground();
   }
@@ -148,7 +164,6 @@ export class GamePage {
     this.socket.send("CLOSE");
     console.log("Sent message CLOSE");
     this.state = State.RESTING;
-    this.backgroundGeolocation.stop();
     this.socket.close(1000);
   }
 
@@ -164,6 +179,7 @@ export class GamePage {
 
   startMatch(): void {
     this.state = State.IN_MATCH;
+    this.backgroundGeolocation.stop()
     this.backgroundMode.moveToForeground()
     this.platform.resume.asObservable().subscribe(() => {
       this.nativeAudio.play('westernWhistle', () => { });
@@ -190,7 +206,6 @@ export class GamePage {
   handleSuccessfullShot() {
     this.state = State.WAITING_MATCH_RESULT;
     this.gyroscopeSubscription.unsubscribe()
-    this.backgroundGeolocation.stop()
     this.vibration.vibrate(0);
     console.log('SHOT A SHERIFF!!!');
     this.sendShoot();
@@ -237,17 +252,24 @@ export class GamePage {
   endMatch(): void { }
 
   fetchLocation() {
+    console.log('cccc')
     setTimeout(() => {
+      console.log('aaaa')
       if (this.state === State.WAITING) {
-        this.geolocation.getCurrentPosition().then((location: BackgroundGeolocationResponse) => {
+        console.log('bbbb')
+        this.geolocation.getCurrentPosition().then((position: Geoposition) => {
           console.log('received location')
-          console.log(location.latitude, location.longitude, location.speed)
-          if (!location.speed) {
-            location.speed = 0
+          console.log(position.coords.latitude, position.coords.longitude, position.coords.speed)
+          this.toast.show("" + position.coords.latitude, "" + position.coords.longitude, "" + position.coords.speed)
+          let speed = position.coords.speed
+          if (!position.coords.speed) {
+            speed = 0
           }
-          this.updateLocation(location.latitude, location.longitude, location.speed)
-        }, (error: any) => {
-          console.error(error)
+
+          this.updateLocation(position.coords.latitude, position.coords.longitude, speed)
+        }, (error: PositionError) => {
+          console.error(error.code, error.message, JSON.stringify(error))
+          this.toast.show("" + error.code, error.message, JSON.stringify(error))
         })
       }
       else return;

@@ -4,6 +4,9 @@ page-game {
         display: flex !important;
         flex-direction: column;
         align-items: center !important;
+        ion-button {
+            font-size: 20px;
+        }
         .start {
             background: green;
         }
