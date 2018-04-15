@@ -77,6 +77,7 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 			ws.Close()
 			break
 		} else if message == core.MessagePing {
+			ws.SetReadDeadline(time.Now().Add(time.Second * 10))
 			websocket.Message.Send(ws, core.MessagePong)
 		}
 	}
