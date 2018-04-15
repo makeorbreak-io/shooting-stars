@@ -11,16 +11,17 @@ var config *Configuration
 
 // Configuration is the struct that holds the application configuration
 type Configuration struct {
-	AppName               string `json:"app_name"`
-	BaseURL               string `json:"base_url"`
-	Port                  int    `json:"port"`
-	Production            bool   `json:"production"`
-	DatabaseType          string `json:"database_type"`
-	DatabaseConnection    string `json:"database_connection"`
-	MaxLocationLastUpdate uint   `json:"maxLocationLastUpdate"`
-	MatchTimeout          uint   `json:"matchTimeout"`
-	MatchMakingInterval   uint   `json:"matchMakingInterval"`
-	LeaderBoardSize       uint   `json:"leaderBoardSize"`
+	AppName               string  `json:"app_name"`
+	BaseURL               string  `json:"base_url"`
+	Port                  int     `json:"port"`
+	Production            bool    `json:"production"`
+	DatabaseType          string  `json:"database_type"`
+	DatabaseConnection    string  `json:"database_connection"`
+	MaxLocationLastUpdate uint    `json:"maxLocationLastUpdate"`
+	MatchTimeout          uint    `json:"matchTimeout"`
+	MatchMakingInterval   uint    `json:"matchMakingInterval"`
+	LeaderBoardSize       uint    `json:"leaderBoardSize"`
+	MaxDistance           float64 `json:"maxDistance"`
 }
 
 // GetConfiguration returns the configuration

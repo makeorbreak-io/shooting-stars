@@ -70,26 +70,56 @@ func (task *MatchMakingTask) Run() {
 	}
 
 	for _, userID := range activeUsersIDs {
+		userLocation, err := task.LocationService.Get(userID)
+		if err != nil {
+			log.Printf("Error when getting current user locations: %v", err)
+			continue
+		}
+
+		// Check if in match
+		if match, _ := task.MatchService.GetActiveMatchByUserID(userID, core.GetConfiguration().MatchTimeout); match != nil {
+			continue
+		}
+
+		// Nearest users
 		nearestUsersLocations, err := task.LocationService.GetNearestActiveUserLocation(userID, core.GetConfiguration().MaxLocationLastUpdate)
 		if err != nil {
 			log.Printf("Error when getting nearest active users locations: %v", err)
 			continue
 		}
-
-		// TODO: Remove me
-		if ws, exists := connections[userID]; exists {
-			err = websocket.Message.Send(ws, core.MessageDuel)
-			if err != nil {
-				log.Printf("Could not send the message: %v", err)
-			}
-		}
-
 		if len(nearestUsersLocations) == 0 {
 			continue
 		}
 
+		// Match with someone
 		for _, nearestUserLocation := range nearestUsersLocations {
-			log.Printf("Nearest user is %d for user %d", nearestUserLocation.UserID, userID)
+			if match, _ := task.MatchService.GetActiveMatchByUserID(nearestUserLocation.ID, core.GetConfiguration().MatchTimeout); match != nil {
+				continue
+			}
+
+			// Check distance
+			if distance := nearestUserLocation.Location.GeoDistanceFrom(&userLocation.Location, false); distance > core.GetConfiguration().MaxDistance {
+				continue
+			}
+
+			// Create match
+			match := &models.Match{
+				StartTime: time.Now(),
+				UserOneID: userID,
+				UserTwoID: nearestUserLocation.UserID,
+			}
+			_, err = task.MatchService.Create(match)
+			if err != nil {
+				log.Printf("Error while creating the match: %v", err)
+				continue
+			}
+
+			// Sending the duel
+			if ws, exists := connections[userID]; exists {
+				websocket.Message.Send(ws, core.MessageDuel)
+			}
+
+			break
 		}
 	}
 }

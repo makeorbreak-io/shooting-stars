@@ -8,5 +8,6 @@
   "maxLocationLastUpdate": 15,
   "matchTimeout": 5,
   "matchMakingInterval": 5,
-  "leaderBoardSize": 5
+  "leaderBoardSize": 5,
+  "maxDistance": 2000
 }
