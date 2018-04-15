@@ -119,6 +119,8 @@ export class GamePage {
       console.error(error)
     })
     this.backgroundGeolocation.start();
+    this.backgroundMode.disableWebViewOptimizations()
+    this.backgroundMode.moveToBackground();
   }
 
   stopPlaying(): void {
@@ -128,15 +130,32 @@ export class GamePage {
     }
   }
 
+  spamWakeUp() {
+    if (this.state != State.IN_MATCH) return;
+    if (this.backgroundMode.isActive()) {
+      console.log('WAKE UP MADAFACKER', this.backgroundMode.isScreenOff(), this.backgroundMode.isActive(), this.backgroundMode.isEnabled())
+      eval('console.log(navigator.proximity.getProximityState())')
+      //this.backgroundMode.moveToForeground()
+      this.backgroundMode.unlock()
+      this.vibration.vibrate(200);
+    } else {
+      /*console.log('GOOD MORNING')
+      this.platform.resume.asObservable().subscribe(() => {
+        this.nativeAudio.play('westernWhistle', () => {});
+        this.vibration.vibrate(3000);
+      });*/
+      this.vibration.vibrate(5000);
+    }
+    setTimeout(() => this.spamWakeUp(), 200)
+  }
+
   startMatch() : void {
     this.state = State.IN_MATCH;
-    this.backgroundMode.wakeUp()
     this.backgroundMode.moveToForeground()
-    this.backgroundMode.unlock()
     this.platform.resume.asObservable().subscribe(() => {
       this.nativeAudio.play('westernWhistle', () => {});
-      this.vibration.vibrate(3000);
     });
+    this.spamWakeUp()
   }
 
   handleSuccessfullShot() {
@@ -161,7 +180,7 @@ export class GamePage {
     this.deviceMotion.getCurrentAcceleration().then(
       (acceleration) => {
         console.log(acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp)
-        if (Math.abs(acceleration.x) >= 9 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 3) {
+        if (Math.abs(acceleration.x) >= 8 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 5) {
           let options: GyroscopeOptions = {
             frequency: 30
           };
