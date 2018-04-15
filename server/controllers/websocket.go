@@ -5,7 +5,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"golang.org/x/net/websocket"
-	"log"
+	"time"
 )
 
 // Ensure MatchController implements IController.
@@ -26,19 +26,6 @@ func (controller *WebSocketController) LoadRoutes(r *gin.RouterGroup) {
 
 // Join is a function so that a user joins a match
 func (controller *WebSocketController) Join(c *gin.Context) {
-	// Authenticate request
-	token, err := controller.GetRequestParam(c, "token")
-	if token == "" || err != nil {
-		controller.HandleError(c, core.ErrorNotLogged)
-		return
-	}
-
-	_, err = controller.AuthService.GetUserIDByToken(token)
-	if err != nil {
-		controller.HandleError(c, core.ErrorNotLogged)
-		return
-	}
-
 	// Handle web socket
 	handler := websocket.Handler(controller.WebSocketHandler)
 	handler.ServeHTTP(c.Writer, c.Request)
@@ -46,24 +33,29 @@ func (controller *WebSocketController) Join(c *gin.Context) {
 
 // WebSocketHandler is the handler for web sockets
 func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
-	var err error
+	ws.SetReadDeadline(time.Now().Add(time.Second * 10))
 
-	for {
-		var reply string
-
-		if err = websocket.Message.Receive(ws, &reply); err != nil {
-			log.Println("Can't receive")
-			break
-		}
-
-		log.Println("Received back from client: " + reply)
-
-		msg := "Received:  " + reply
-		log.Println("Sending to client: " + msg)
-
-		if err = websocket.Message.Send(ws, msg); err != nil {
-			log.Println("Can't send")
-			break
-		}
+	// Get authentication token
+	var token string
+	err := websocket.Message.Receive(ws, &token)
+	if err != nil {
+		websocket.Message.Send(ws, core.ErrorNotLogged.Error())
+		ws.Close()
+		return
 	}
+
+	// Authenticate request
+	if token == "" {
+		websocket.Message.Send(ws, core.ErrorNotLogged.Error())
+		ws.Close()
+		return
+	}
+	_, err = controller.AuthService.GetUserIDByToken(token)
+	if err != nil {
+		websocket.Message.Send(ws, core.ErrorNotLogged.Error())
+		ws.Close()
+		return
+	}
+
+	websocket.Message.Send(ws, "OK")
 }
