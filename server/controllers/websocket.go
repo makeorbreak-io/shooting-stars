@@ -6,6 +6,7 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"golang.org/x/net/websocket"
+	"log"
 	"time"
 )
 
@@ -73,6 +74,7 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 		}
 
 		if message == core.MessageClose {
+			log.Println("Closing channel")
 			controller.MatchMakingTask.RemoveConnection(userID)
 			ws.Close()
 			break
