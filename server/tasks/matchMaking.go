@@ -71,6 +71,7 @@ func (task *MatchMakingTask) Run() {
 
 		// TODO: Remove me
 		if ws, exists := connections[userID]; exists {
+			log.Printf("Sending duel message")
 			websocket.Message.Send(ws, core.MessageDuel)
 		}
 
