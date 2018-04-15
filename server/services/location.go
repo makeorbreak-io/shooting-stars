@@ -105,7 +105,7 @@ func (service *LocationService) GetNearestActiveUserLocation(userID, maxLastUpda
 			return nil, db.Error
 		}
 
-		nearestLocation.Location = location
+		nearestLocation.Location = location.Location
 	}
 
 	return result, nil
