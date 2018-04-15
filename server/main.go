@@ -84,11 +84,22 @@ func main() {
 	routerAuthenticatedGroup := routerBaseGroup.Group("")
 	routerAuthenticatedGroup.Use(middlewares.HandleAuthentication(authService))
 
+	// Start tasks
+	matchMakingTask := &tasks.MatchMakingTask{
+		LocationService: locationService,
+		MatchService:    matchService,
+	}
+	matchMakingTask.Start(config.MatchMakingInterval)
+
 	// Load all public controllers
 	ctrls := []core.IController{
 		&controllers.AuthController{
 			AuthService: authService,
 			UserService: userService,
+		},
+		&controllers.WebSocketController{
+			AuthService:     authService,
+			MatchMakingTask: matchMakingTask,
 		},
 	}
 	for _, controller := range ctrls {
@@ -114,16 +125,6 @@ func main() {
 	for _, controller := range ctrls {
 		controller.LoadRoutes(routerAuthenticatedGroup)
 	}
-
-	// Start tasks
-	matchMakingTask := tasks.MatchMakingTask{
-		LocationService: locationService,
-		MatchService:    matchService,
-	}
-	matchMakingTask.Start(config.MatchMakingInterval)
-
-	// TODO: Remove me
-	matchMakingTask.Stop()
 
 	// Start the server
 	log.Printf("Started the server on port %d (prod = %v)", config.Port, config.Production)

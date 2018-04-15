@@ -79,6 +79,7 @@ func (service *LocationService) GetNearestActiveUserLocation(userID, maxLastUpda
 		return nil, err
 	}
 
+	// Nearest users
 	var result []*models.Location
 	db := service.Database.
 		Order("ST_Distance(location, '" + userLocation.Location.ToWKT() + "')").
@@ -88,6 +89,23 @@ func (service *LocationService) GetNearestActiveUserLocation(userID, maxLastUpda
 
 	if db.Error != nil {
 		return nil, db.Error
+	}
+
+	// Get location as a geo.Point
+	type Location struct {
+		Location geo.Point `gorm:"location"`
+	}
+	for _, nearestLocation := range result {
+		location := Location{}
+		db = service.Database.Table("mob_locations").
+			Select("ST_AsBinary(location) as location").
+			Where("user_id = ?", userID).
+			Scan(&location)
+		if db.Error != nil {
+			return nil, db.Error
+		}
+
+		nearestLocation.Location = location.Location
 	}
 
 	return result, nil

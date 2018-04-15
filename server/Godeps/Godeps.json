@@ -112,6 +112,10 @@
 			"Rev": "f6b343c37ca80bfa8ea539da67a0b621f84fab1d"
 		},
 		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "e0c57d8f86c17f0724497efcb3bc617e82834821"
+		},
+		{
 			"ImportPath": "golang.org/x/sys/unix",
 			"Rev": "d75a52659825e75fff6158388dddc6a5b04f9ba5"
 		},
