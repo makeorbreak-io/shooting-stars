@@ -6,7 +6,6 @@ import (
 	"github.com/makeorbreak-io/shooting-stars/server/models"
 	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"golang.org/x/net/websocket"
-	"log"
 	"time"
 )
 
