@@ -23,6 +23,7 @@ import { ApiProvider } from '../providers/api/api';
 import { HttpClientModule} from '@angular/common/http';
 import { GlobalsProvider } from '../providers/globals/globals';
 import { AuthProvider } from '../providers/auth/auth';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { AuthProvider } from '../providers/auth/auth';
     BackgroundGeolocation,
     BackgroundMode,
     DeviceMotion,
+    DeviceOrientation,
     Geolocation,
     Gyroscope,
     HTTP,

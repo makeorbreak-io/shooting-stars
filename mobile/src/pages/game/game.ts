@@ -4,6 +4,7 @@ import { BackgroundMode } from '@ionic-native/background-mode';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Component } from '@angular/core';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 import { Gyroscope, GyroscopeOrientation, GyroscopeOptions } from '@ionic-native/gyroscope';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Platform } from 'ionic-angular';
@@ -11,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Vibration } from '@ionic-native/vibration';
 import { GlobalsProvider } from '../../providers/globals/globals';
 import { NativeAudio } from '@ionic-native/native-audio';
+import { Flashlight } from '@ionic-native/flashlight';
 
 /**
  * Generated class for the GamePage page.
@@ -25,12 +27,18 @@ enum State {
   COOLDOWN,
   RESTING
 }
+interface Rotation {
+  x: number,
+  y: number,
+  z: number,
+  timestamp: number
+}
 
 @IonicPage()
 @Component({
   selector: 'page-game',
   templateUrl: 'game.html',
-  providers: [ Vibration ]
+  providers: [ Flashlight, Vibration ]
 })
 export class GamePage {
   private mobileDevice: boolean
@@ -39,6 +47,16 @@ export class GamePage {
   private State = State;
   private state: State = State.RESTING;
   private searching: boolean = false;
+  private totalRotation: Rotation = {
+    x: 0,
+    y: 0,
+    z: 0,
+    timestamp: 0
+  }
+  private gyroscopeSubscription
+  private gyroscopeOptions: GyroscopeOptions = {
+    frequency: 30
+  };
   constructor(
     public api: ApiProvider,
     public authProvider: AuthProvider,
@@ -51,7 +69,9 @@ export class GamePage {
     private deviceMotion: DeviceMotion,
     private globals: GlobalsProvider,
     private nativeAudio: NativeAudio,
-    private vibration: Vibration) {
+    private vibration: Vibration,
+    private deviceOrientation: DeviceOrientation,
+    private flashlight: Flashlight) {
     if (this.platform.is('cordova')) {
       this.mobileDevice = true
     } else {
@@ -74,9 +94,6 @@ export class GamePage {
 
     //this.socket = new WebSocket("ws://" + this.globals.API_URL + "/matches");
     this.socket = new WebSocket("ws://echo.websocket.org");
-    this.socket.onopen = function () {
-      setTimeout(() => this.send(JSON.stringify({ message: 'hello server' })), 3000);
-    }
 
     this.socket.onmessage = (event) => {
       let m = JSON.parse(event.data);
@@ -100,7 +117,6 @@ export class GamePage {
 
   startPlaying(): void {
     this.state = State.WAITING
-    this.searching = true;
     this.backgroundMode.enable();
     if (!this.mobileDevice) {
       console.warn('Cannot start background geolocation because the app is not being run in a mobile device.')
@@ -121,6 +137,7 @@ export class GamePage {
     this.backgroundGeolocation.start();
     this.backgroundMode.disableWebViewOptimizations()
     this.backgroundMode.moveToBackground();
+    setTimeout(() => this.socket.send(JSON.stringify({ message: 'hello server' })), 3000);
   }
 
   stopPlaying(): void {
@@ -156,10 +173,23 @@ export class GamePage {
       this.nativeAudio.play('westernWhistle', () => {});
     });
     this.spamWakeUp()
+    this.totalRotation.x = 0
+    this.totalRotation.y = 0
+    this.totalRotation.z = 0
+    this.gyroscopeSubscription = this.gyroscope.watch(this.gyroscopeOptions).subscribe((orientation: GyroscopeOrientation) => {
+      if (this.state == State.IN_MATCH) {
+        this.totalRotation.x += orientation.x
+        this.totalRotation.y += orientation.y
+        this.totalRotation.z += orientation.z
+        console.log(this.totalRotation.x, this.totalRotation.y, this.totalRotation.z)
+      }
+    })
   }
 
   handleSuccessfullShot() {
+    this.gyroscopeSubscription.unsubscribe()
     this.state = State.RESTING;
+    this.vibration.vibrate(0);
     console.log('SHOT A SHERIFF!!!')
     this.api.post('/shoot/' + this.authProvider.userID, {
     })
@@ -176,17 +206,18 @@ export class GamePage {
   }
 
   shoot() {
+    if (!this.flashlight.isSwitchedOn()) {
+      this.flashlight.switchOn()
+      setTimeout(() => {
+        this.flashlight.switchOff()
+      }, 50)
+    }
     this.nativeAudio.play('gunshot', () => {})
     this.deviceMotion.getCurrentAcceleration().then(
       (acceleration) => {
-        console.log(acceleration.x, acceleration.y, acceleration.z, acceleration.timestamp)
         if (Math.abs(acceleration.x) >= 8 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 5) {
-          let options: GyroscopeOptions = {
-            frequency: 30
-          };
-          this.gyroscope.getCurrent(options).then((orientation: GyroscopeOrientation) => {
-            console.log(orientation.x, orientation.y, orientation.z, orientation.timestamp)
-            if (Math.hypot(orientation.x, orientation.y, orientation.z) <= 1) {
+          this.gyroscope.getCurrent(this.gyroscopeOptions).then((orientation: GyroscopeOrientation) => {
+            if (Math.abs(this.totalRotation.x) > 45) {
               this.handleSuccessfullShot()
             } else {
               this.handleMissedShot()
