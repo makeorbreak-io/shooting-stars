@@ -25,7 +25,7 @@ var connections map[uint]*websocket.Conn
 // AddConnection adds a web socket connection associated to a given user
 func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
 	connections[userID] = ws
-	log.Printf("User %d", userID)
+	log.Printf("User after adding connection %d", userID)
 }
 
 // Start is a function to start the task with a given interval between runs
