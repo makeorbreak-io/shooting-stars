@@ -4,5 +4,13 @@
   <button *ngIf="state == State.WAITING" ion-button class="stop" (click)="stopPlaying()">Leave Quest</button>
   <button *ngIf="state == State.IN_MATCH" ion-button class="shoot" (click)="shoot()">Click the screen to shoot!</button>
   <h1 *ngIf="state == State.COOLDOWN">MISS!</h1>
+  <div *ngIf="state == State.WAITING_MATCH_RESULT">
+    <h1>Match ended!</h1>
+    <span>Please wait for the results...</span><ion-spinner></ion-spinner>
+  </div>
+  <div *ngIf="state == State.VIEWING_MATCH_RESULT">
+    <p>Congratulations! You won the game!</p>
+    <button ion-button (click)="this.state = State.RESTING">Ok!</button>
+  </div>
 
 </ion-content>

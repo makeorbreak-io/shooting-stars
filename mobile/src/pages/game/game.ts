@@ -25,6 +25,8 @@ enum State {
   WAITING,
   IN_MATCH,
   COOLDOWN,
+  WAITING_MATCH_RESULT,
+  VIEWING_MATCH_RESULT,
   RESTING
 }
 interface Rotation {
@@ -142,28 +144,18 @@ export class GamePage {
 
   stopPlaying(): void {
     this.state = State.RESTING
-    if (this.mobileDevice) {
-      this.backgroundGeolocation.stop()
-    }
+    this.backgroundGeolocation.stop()
   }
 
   spamWakeUp() {
     if (this.state != State.IN_MATCH) return;
-    if (this.backgroundMode.isActive()) {
-      console.log('WAKE UP MADAFACKER', this.backgroundMode.isScreenOff(), this.backgroundMode.isActive(), this.backgroundMode.isEnabled())
-      eval('console.log(navigator.proximity.getProximityState())')
-      //this.backgroundMode.moveToForeground()
+    this.vibration.vibrate(5000);
+    let vibrating: boolean = false;
+    let interval = setInterval(() => {
       this.backgroundMode.unlock()
       this.vibration.vibrate(200);
-    } else {
-      /*console.log('GOOD MORNING')
-      this.platform.resume.asObservable().subscribe(() => {
-        this.nativeAudio.play('westernWhistle', () => {});
-        this.vibration.vibrate(3000);
-      });*/
-      this.vibration.vibrate(5000);
-    }
-    setTimeout(() => this.spamWakeUp(), 200)
+    }, 200)
+    setTimeout(() => clearInterval(interval), 5000)
   }
 
   startMatch() : void {
@@ -187,16 +179,19 @@ export class GamePage {
   }
 
   handleSuccessfullShot() {
+    this.state = State.WAITING_MATCH_RESULT
     this.gyroscopeSubscription.unsubscribe()
-    this.state = State.RESTING;
+    this.backgroundGeolocation.stop()
     this.vibration.vibrate(0);
     console.log('SHOT A SHERIFF!!!')
     this.api.post('/shoot/' + this.authProvider.userID, {
     })
     .then(data => {
       console.log(data);
+      this.state = State.VIEWING_MATCH_RESULT
     }).catch((error: HttpErrorResponse) => {
       console.error(error);
+      this.state = State.VIEWING_MATCH_RESULT
     });
   }
 
@@ -217,7 +212,7 @@ export class GamePage {
       (acceleration) => {
         if (Math.abs(acceleration.x) >= 8 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 5) {
           this.gyroscope.getCurrent(this.gyroscopeOptions).then((orientation: GyroscopeOrientation) => {
-            if (Math.abs(this.totalRotation.x) > 45) {
+            if (Math.abs(this.totalRotation.x) > 30) {
               this.handleSuccessfullShot()
             } else {
               this.handleMissedShot()

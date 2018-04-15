@@ -19,7 +19,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
-      this.flashlight.available()
+      this.flashlight.available(); // Hopefully this will ask for permissions
       this.nativeAudio.preloadSimple('gunshot', 'assets/sounds/gun_shot.mp3').then((e) => console.log('Loaded gunshot', e)).catch((e) => console.error('Error loading gunshot', e))
       this.nativeAudio.preloadSimple('westernWhistle', 'assets/sounds/western_whistle.mp3').then((e) => console.log('Loaded whistle', e)).catch((e) => console.error('Error loading whistle', e))
     });
