@@ -211,14 +211,7 @@ export class GamePage {
     this.deviceMotion.getCurrentAcceleration().then(
       (acceleration) => {
         if (Math.abs(acceleration.x) >= 8 && Math.abs(acceleration.y) <= 3 && Math.abs(acceleration.z) <= 5) {
-          this.gyroscope.getCurrent(this.gyroscopeOptions).then((orientation: GyroscopeOrientation) => {
-            if (Math.abs(this.totalRotation.x) > 30) {
-              this.handleSuccessfullShot()
-            } else {
-              this.handleMissedShot()
-            }
-          })
-          .catch()
+          this.handleSuccessfullShot()
         } else {
           this.handleMissedShot()
         }
