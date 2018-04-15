@@ -127,6 +127,9 @@ func (task *MatchMakingTask) Run() {
 			if ws, exists := connections[userID]; exists {
 				websocket.Message.Send(ws, core.MessageDuel)
 			}
+			if ws, exists := connections[nearestUserLocation.UserID]; exists {
+				websocket.Message.Send(ws, core.MessageDuel)
+			}
 
 			log.Printf("Message sent")
 
