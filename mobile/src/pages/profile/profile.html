@@ -5,8 +5,7 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-img *ngIf="userData.gender === 'M'" src="../../assets/imgs/cowboy.png" alt=""></ion-img>
-  <ion-img *ngIf="userData.gender === 'F'" src="../../assets/imgs/cowgirl.png" alt=""></ion-img>
+  <ion-img src="{{profileImg}}" alt=""></ion-img>
   <div id="profile">
     <div class="name">{{userData.name}}</div>
     <div id="profile-content">

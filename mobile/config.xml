@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>mobile</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <name>CowboyCupid</name>
+    <description>Shoot a stranger and you might fall in love.</description>
+    <author email="hi@ionicframework" href="http://ionicframework.com/">LastButNotLeast</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -91,12 +91,15 @@
     <plugin name="cordova-plugin-advanced-http" spec="^1.11.1" />
     <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
     <plugin name="cordova-plugin-vibration" spec="^3.0.1" />
-    <engine name="browser" spec="5.0.3" />
-    <engine name="android" spec="~7.0.0" />
     <allow-navigation href="http://193.137.145.59:8100" />
     <plugin name="cordova-plugin-background-mode" spec="https://github.com/katzer/cordova-plugin-background-mode.git" />
     <plugin name="org.awokenwell.proximity" spec="https://github.com/awoken-well/cordova-plugin-proximity.git" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <plugin name="cordova-plugin-device-orientation" spec="^1.0.7" />
     <plugin name="cordova-plugin-flashlight" spec="^3.2.0" />
+    <allow-navigation href="http://localhost:8100" />
+    <allow-navigation href="https://localhost:8100" />
+    <engine name="browser" spec="5.0.3" />
+    <plugin name="cordova-plugin-x-toast" spec="^2.6.2" />
+    <engine name="android" spec="~7.0.0" />
 </widget>
