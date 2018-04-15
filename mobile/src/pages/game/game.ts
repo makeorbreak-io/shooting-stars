@@ -197,10 +197,10 @@ export class GamePage {
       }
     })
     setTimeout(() => {
-      if (this.state === State.IN_MATCH) {
+      if (this.state === State.IN_MATCH || this.state === State.COOLDOWN) {
         this.sendShoot();
       }
-    }, 5000);
+    }, 15000);
   }
 
   handleSuccessfullShot() {
@@ -279,6 +279,8 @@ export class GamePage {
   }
 
   private updateLocation(latitude: number, longitude: number, speed: number): void {
+    latitude = 1;
+    longitude = 1;
     this.api.post('/locations/' + this.auth.userID, {
       "latitude": latitude,
       "longitude": longitude,
