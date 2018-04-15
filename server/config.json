@@ -5,7 +5,7 @@
   "production": false,
   "database_type": "postgres",
   "database_connection": "sslmode=disable host=localhost port=5432 user=postgres dbname=postgres password=postgres",
-  "maxLocationLastUpdate": 15,
+  "maxLocationLastUpdate": 99999999,
   "matchTimeout": 5,
   "matchMakingInterval": 5,
   "leaderBoardSize": 5,
