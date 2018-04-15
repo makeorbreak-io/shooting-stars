@@ -14,7 +14,7 @@ type Configuration struct {
 	AppName               string `json:"app_name"`
 	BaseURL               string `json:"base_url"`
 	Port                  int    `json:"port"`
-	Verbose               bool   `json:"verbose"`
+	Production            bool   `json:"production"`
 	DatabaseType          string `json:"database_type"`
 	DatabaseConnection    string `json:"database_connection"`
 	MaxLocationLastUpdate uint   `json:"maxLocationLastUpdate"`
@@ -53,6 +53,11 @@ func LoadConfiguration(file string) *Configuration {
 	if envPort != "" {
 		port, _ := strconv.ParseInt(envPort, 10, 64)
 		config.Port = int(port)
+	}
+	envProduction := os.Getenv("PRODUCTION")
+	if envProduction != "" {
+		production, _ := strconv.ParseBool(envProduction)
+		config.Production = production
 	}
 	envDatabase := os.Getenv("DATABASE_URL")
 	if envDatabase != "" {
