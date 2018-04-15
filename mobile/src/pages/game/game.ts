@@ -45,6 +45,7 @@ export class GamePage {
   uselessVarToShutUpTSLint = this.State.IN_MATCH;
   private state: State = State.RESTING;
   private genderPreference: string = "ANY";
+  private hasWon: boolean = null;
   private totalRotation: Rotation = {
     x: 0,
     y: 0,
@@ -108,6 +109,7 @@ export class GamePage {
     this.socket.onmessage = (event) => {
 
       if (event.data === "PONG") {
+        console.log("received PONG");
         setTimeout(() => {
           this.socket.send("PING");
         }, 1000);
@@ -124,7 +126,6 @@ export class GamePage {
         this.startMatch();
         return;
       }
-
     }
 
     this.socket.onerror = () => {
@@ -206,7 +207,7 @@ export class GamePage {
     this.state = State.WAITING_MATCH_RESULT;
     this.gyroscopeSubscription.unsubscribe()
     this.vibration.vibrate(0);
-    console.log('SHOT A SHERIFF!!!')
+    console.log('SHOT A SHERIFF!!!');
     this.sendShoot();
   }
 
@@ -215,9 +216,11 @@ export class GamePage {
     })
       .then(data => {
         console.log(JSON.stringify(data));
-        this.state = State.VIEWING_MATCH_RESULT
+        this.state = State.VIEWING_MATCH_RESULT;
+        this.hasWon = this.auth.userID == data['winnerID'];
       }).catch((error: HttpErrorResponse) => {
         this.state = State.VIEWING_MATCH_RESULT
+        this.hasWon = false;
       });
   }
 

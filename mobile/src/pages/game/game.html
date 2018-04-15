@@ -27,8 +27,9 @@
     <ion-spinner></ion-spinner>
   </div>
   <div *ngIf="state == State.VIEWING_MATCH_RESULT">
-    <p>Congratulations! You won the game!</p>
-    <button ion-button (click)="this.state = State.RESTING">Ok!</button>
+    <p *ngIf="hasWon">Congratulations! You won the duel!</p>
+    <p *ngIf="!hasWon">You lost the duel!</p>
+    <button ion-button (click)="state = State.RESTING">Ok!</button>
   </div>
 
 </ion-content>
