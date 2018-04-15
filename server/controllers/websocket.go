@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
+	"github.com/makeorbreak-io/shooting-stars/server/tasks"
 	"golang.org/x/net/websocket"
 	"time"
 )
@@ -14,7 +15,8 @@ var _ core.IController = &WebSocketController{}
 // WebSocketController is the structure for the controller of web socket
 type WebSocketController struct {
 	core.Controller
-	AuthService models.IAuthService
+	AuthService     models.IAuthService
+	MatchMakingTask tasks.MatchMakingTask
 }
 
 // LoadRoutes loads all the routes of matches
@@ -50,12 +52,14 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 		ws.Close()
 		return
 	}
-	_, err = controller.AuthService.GetUserIDByToken(token)
+	userID, err := controller.AuthService.GetUserIDByToken(token)
 	if err != nil {
 		websocket.Message.Send(ws, core.ErrorNotLogged.Error())
 		ws.Close()
 		return
 	}
 
-	websocket.Message.Send(ws, "OK")
+	websocket.Message.Send(ws, core.MessageOK)
+
+	controller.MatchMakingTask.AddConnection(userID, ws)
 }

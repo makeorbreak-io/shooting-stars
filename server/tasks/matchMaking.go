@@ -3,6 +3,7 @@ package tasks
 import (
 	"github.com/makeorbreak-io/shooting-stars/server/core"
 	"github.com/makeorbreak-io/shooting-stars/server/models"
+	"golang.org/x/net/websocket"
 	"log"
 	"time"
 )
@@ -16,6 +17,14 @@ type MatchMakingTask struct {
 	MatchService    models.IMatchService
 	ticker          *time.Ticker
 	quit            chan struct{}
+}
+
+// Websocket connections mapped from user to webs ocket
+var connections map[uint]*websocket.Conn
+
+// AddConnection adds a web socket connection associated to a given user
+func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
+	connections[userID] = ws
 }
 
 // Start is a function to start the task with a given interval between runs
@@ -57,6 +66,11 @@ func (task *MatchMakingTask) Run() {
 		if err != nil {
 			log.Printf("Error when getting nearest active users locations: %v", err)
 			continue
+		}
+
+		// TODO: Remove me
+		if ws, exists := connections[userID]; exists {
+			websocket.Message.Send(ws, core.MessageDuel)
 		}
 
 		if len(nearestUsersLocations) == 0 {
