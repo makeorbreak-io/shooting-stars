@@ -74,7 +74,6 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 		}
 
 		if message == core.MessageClose {
-			log.Println("Closing channel")
 			controller.MatchMakingTask.RemoveConnection(userID)
 			ws.Close()
 			break

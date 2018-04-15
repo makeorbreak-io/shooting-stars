@@ -66,7 +66,6 @@ func (task *MatchMakingTask) Run() {
 	}
 
 	if len(activeUsersIDs) == 0 {
-		log.Printf("Error no active users")
 		return
 	}
 
@@ -79,7 +78,6 @@ func (task *MatchMakingTask) Run() {
 
 		// TODO: Remove me
 		if ws, exists := connections[userID]; exists {
-			log.Printf("Sending duel message")
 			err = websocket.Message.Send(ws, core.MessageDuel)
 			if err != nil {
 				log.Printf("Could not send the message: %v", err)
@@ -87,7 +85,6 @@ func (task *MatchMakingTask) Run() {
 		}
 
 		if len(nearestUsersLocations) == 0 {
-			log.Printf("Error no near users")
 			continue
 		}
 
