@@ -102,6 +102,7 @@ func (task *MatchMakingTask) Run() {
 
 			// Check distance
 			if distance := nearestUserLocation.Location.GeoDistanceFrom(&userLocation.Location, false); distance > core.GetConfiguration().MaxDistance {
+				log.Printf("Distance between %d and %d is %v", userID, nearestUserLocation.UserID, distance)
 				continue
 			}
 
