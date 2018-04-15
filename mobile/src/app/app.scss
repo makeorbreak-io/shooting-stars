@@ -37,3 +37,14 @@ ion-content ion-title, ion-content p, ion-content div {
   font-family: 'WesternSoft';
   font-size: 1.1em;
 }
+
+.alert-md .alert-wrapper {
+  background-color: $dark-brown;
+}
+.alert-md .alert-title {
+  color: white;
+}
+.alert-md .alert-button,
+.alert-md .alert-sub-title {
+  color: white;
+}

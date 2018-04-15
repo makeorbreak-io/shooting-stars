@@ -10,5 +10,5 @@ import { Injectable } from '@angular/core';
 export class GlobalsProvider {
 
     public API_URL: String = "https://shooting-stars.herokuapp.com";
-
+    public SOCKET_URL: String = "ws://shooting-stars.herokuapp.com";
 }
