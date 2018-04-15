@@ -217,7 +217,7 @@ export class GamePage {
       .then(data => {
         console.log(JSON.stringify(data));
         this.state = State.VIEWING_MATCH_RESULT;
-        this.hasWon = this.auth.userID == data['winnerID'];
+        this.hasWon = +(this.auth.userID) == +(data['winnerID']);
       }).catch((error: HttpErrorResponse) => {
         this.state = State.VIEWING_MATCH_RESULT
         this.hasWon = false;
