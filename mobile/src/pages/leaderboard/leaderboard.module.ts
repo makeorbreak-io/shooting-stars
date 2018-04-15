@@ -3,9 +3,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { LeaderboardPage } from './leaderboard';
 
 @NgModule({
-  declarations: [
-    LeaderboardPage,
-  ],
+  declarations: [],
   imports: [
     IonicPageModule.forChild(LeaderboardPage),
   ],
