@@ -85,7 +85,7 @@ func main() {
 	routerAuthenticatedGroup.Use(middlewares.HandleAuthentication(authService))
 
 	// Start tasks
-	matchMakingTask := tasks.MatchMakingTask{
+	matchMakingTask := &tasks.MatchMakingTask{
 		LocationService: locationService,
 		MatchService:    matchService,
 	}
@@ -99,7 +99,7 @@ func main() {
 		},
 		&controllers.WebSocketController{
 			AuthService:     authService,
-			MatchMakingTask: &matchMakingTask,
+			MatchMakingTask: matchMakingTask,
 		},
 	}
 	for _, controller := range ctrls {

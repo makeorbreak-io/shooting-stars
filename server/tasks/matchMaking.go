@@ -20,7 +20,7 @@ type MatchMakingTask struct {
 }
 
 // Web socket connections mapped from user to web socket
-var connections map[uint]*websocket.Conn
+var connections = make(map[uint]*websocket.Conn, 0)
 
 // AddConnection adds a web socket connection associated to a given user
 func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
