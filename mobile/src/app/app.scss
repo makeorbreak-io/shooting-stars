@@ -21,3 +21,19 @@ $dark-yellow: #edce70;
 .tabs-md .tab-button[aria-selected=true] .tab-button-icon {
   color: $light-yellow;
 }
+
+@font-face {
+  font-family: 'Western';
+  src: url('../assets/fonts/RioGrande.ttf');
+}
+@font-face {
+  font-family: 'WesternSoft';
+  src: url('../assets/fonts/Marlboro.ttf');
+}
+ion-content h1 {
+  font-family: 'Western';
+}
+ion-content ion-title, ion-content p, ion-content div {
+  font-family: 'WesternSoft';
+  font-size: 1.1em;
+}

@@ -3,6 +3,7 @@
   <div id="leaderboard">
     <ion-list>
       <ion-item *ngFor="let player of players">
+        <div>{{player.rank}}</div>
         <div>{{player.name}}</div>
         <div>{{player.wins}} duels won</div>
       </ion-item>
