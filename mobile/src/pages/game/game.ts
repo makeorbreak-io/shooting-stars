@@ -197,7 +197,7 @@ export class GamePage {
       }
     })
     setTimeout(() => {
-      if (this.state === State.IN_MATCH) {
+      if (this.state === State.IN_MATCH || this.state === State.COOLDOWN) {
         this.sendShoot();
       }
     }, 15000);
