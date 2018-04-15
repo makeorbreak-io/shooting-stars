@@ -97,6 +97,10 @@ export class GamePage {
   }
 
   startPlaying(): void {
+    this.hasWon = null
+    if (this.socket != null)
+      this.socket.close(1000);
+
     this.socket = new WebSocket(this.globals.SOCKET_URL + "/websocket/" + this.auth.token);
     //this.socket = new WebSocket("ws://echo.websocket.org");
 
@@ -216,8 +220,10 @@ export class GamePage {
     })
       .then(data => {
         console.log(JSON.stringify(data));
-        this.state = State.VIEWING_MATCH_RESULT;
-        this.hasWon = +(this.auth.userID) == +(data['winnerID']);
+        if (this.state == State.WAITING_MATCH_RESULT) {
+          this.state = State.VIEWING_MATCH_RESULT;
+          this.hasWon = +(this.auth.userID) == +(data['winnerID']);
+        }
       }).catch((error: HttpErrorResponse) => {
         this.state = State.VIEWING_MATCH_RESULT
         this.hasWon = false;
