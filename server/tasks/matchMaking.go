@@ -27,6 +27,14 @@ func (task *MatchMakingTask) AddConnection(userID uint, ws *websocket.Conn) {
 	connections[userID] = ws
 }
 
+// RemoveConnection removes a web socket connection associated to a given user
+func (task *MatchMakingTask) RemoveConnection(userID uint) {
+	_, ok := connections[userID]
+	if ok {
+		delete(connections, userID)
+	}
+}
+
 // Start is a function to start the task with a given interval between runs
 func (task *MatchMakingTask) Start(interval uint) {
 	task.ticker = time.NewTicker(time.Second * time.Duration(interval))

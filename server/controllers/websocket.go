@@ -62,4 +62,18 @@ func (controller *WebSocketController) WebSocketHandler(ws *websocket.Conn) {
 	websocket.Message.Send(ws, core.MessageOK)
 
 	controller.MatchMakingTask.AddConnection(userID, ws)
+
+	var message string
+	for {
+		err := websocket.Message.Receive(ws, &message)
+		if err != nil {
+			continue
+		}
+
+		if message == core.MessageClose {
+			controller.MatchMakingTask.RemoveConnection(userID)
+			ws.Close()
+			break
+		}
+	}
 }

@@ -6,4 +6,6 @@ var (
 	MessageOK = "OK"
 	// MessageDuel is sent when a duel started
 	MessageDuel = "DUEL"
+	// MessageClose is received when the client closes
+	MessageClose = "CLOUSE"
 )
