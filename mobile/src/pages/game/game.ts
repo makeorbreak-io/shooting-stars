@@ -97,6 +97,9 @@ export class GamePage {
   }
 
   startPlaying(): void {
+    if (this.socket != null)
+      this.socket.close(1000);
+
     this.socket = new WebSocket(this.globals.SOCKET_URL + "/websocket/" + this.auth.token);
     //this.socket = new WebSocket("ws://echo.websocket.org");
 
