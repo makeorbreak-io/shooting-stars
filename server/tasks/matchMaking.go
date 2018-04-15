@@ -58,6 +58,7 @@ func (task *MatchMakingTask) Run() {
 	}
 
 	if len(activeUsersIDs) == 0 {
+		log.Printf("Error no active users")
 		return
 	}
 
@@ -74,6 +75,7 @@ func (task *MatchMakingTask) Run() {
 		}
 
 		if len(nearestUsersLocations) == 0 {
+			log.Printf("Error no near users")
 			continue
 		}
 
