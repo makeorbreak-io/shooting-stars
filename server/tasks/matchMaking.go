@@ -93,14 +93,19 @@ func (task *MatchMakingTask) Run() {
 
 		// Match with someone
 		for _, nearestUserLocation := range nearestUsersLocations {
+			log.Printf("We have near users...")
 			if match, _ := task.MatchService.GetActiveMatchByUserID(nearestUserLocation.ID, core.GetConfiguration().MatchTimeout); match != nil {
 				continue
 			}
+
+			log.Printf("That are not in match")
 
 			// Check distance
 			if distance := nearestUserLocation.Location.GeoDistanceFrom(&userLocation.Location, false); distance > core.GetConfiguration().MaxDistance {
 				continue
 			}
+
+			log.Printf("Near than %v", core.GetConfiguration().MaxDistance)
 
 			// Create match
 			match := &models.Match{
@@ -114,10 +119,14 @@ func (task *MatchMakingTask) Run() {
 				continue
 			}
 
+			log.Printf("Match created")
+
 			// Sending the duel
 			if ws, exists := connections[userID]; exists {
 				websocket.Message.Send(ws, core.MessageDuel)
 			}
+
+			log.Printf("Message sent")
 
 			break
 		}
