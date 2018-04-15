@@ -25,7 +25,7 @@ func (controller *MatchController) LoadRoutes(r *gin.RouterGroup) {
 	router := r.Group("/matches")
 
 	router.POST("/:userID/shoot", controller.Shoot)
-	router.POST("/:userID/join", controller.Join)
+	router.GET("/:userID/join", controller.Join)
 }
 
 // Shoot is a function to register a user shoot
